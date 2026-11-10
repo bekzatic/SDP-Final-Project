@@ -74,6 +74,28 @@ class ProductFactoryTest {
     }
 
     @Test
+    void templateMethodCannotBeOverridden() throws Exception {
+        int modifiers = ProductFactory.class.getMethod("create", ProductSpec.class).getModifiers();
+        assertTrue(java.lang.reflect.Modifier.isFinal(modifiers));
+        int factoryMethod = ProductFactory.class.getDeclaredMethod("createProduct", long.class, ProductSpec.class)
+                .getModifiers();
+        assertTrue(java.lang.reflect.Modifier.isAbstract(factoryMethod));
+        assertTrue(java.lang.reflect.Modifier.isProtected(factoryMethod));
+    }
+
+    @Test
+    void everyCategoryHasSpecsForEachRequiredAttribute() {
+        Map<Category, Map<String, Object>> data = Map.of(Category.LAPTOP, LAPTOP, Category.DESKTOP_PC, DESKTOP,
+                Category.MONITOR, MONITOR, Category.ACCESSORY, ACCESSORY);
+        for (Category category : Category.values()) {
+            ProductFactory factory = ProductFactory.forCategory(category);
+            Product product = factory.create(spec(data.get(category)));
+            assertEquals(factory.requiredAttributes().size(), product.getSpecs().size(), category.name());
+        }
+        assertThrows(IllegalArgumentException.class, () -> ProductFactory.forCategory(null));
+    }
+
+    @Test
     void wrongAttributeTypeIsRejected() {
         Map<String, Object> wrong = new java.util.HashMap<>(MONITOR);
         wrong.put("refreshRateHz", "очень быстро");

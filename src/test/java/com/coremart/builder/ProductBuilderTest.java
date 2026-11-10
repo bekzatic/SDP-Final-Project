@@ -73,6 +73,25 @@ class ProductBuilderTest {
     }
 
     @Test
+    void builderHandsTheProductToTheFactory() {
+        ProductBuilder builder = laptop();
+        Product first = builder.build();
+        Product second = builder.build();
+        assertInstanceOf(Laptop.class, second);
+        assertTrue(second.getId() > first.getId(), "each build() goes through the factory and gets a new id");
+        assertEquals(first.getFullName(), second.getFullName());
+    }
+
+    @Test
+    void explicitValuesOverrideDefaults() {
+        Monitor m = (Monitor) ProductBuilder.of(Category.MONITOR)
+                .brand("Samsung").name("Odyssey G5").price(159_000)
+                .sizeInches(27).resolution("2560 × 1440").refreshRateHz(165).panelType("VA").build();
+        assertEquals(165, m.getRefreshRateHz());
+        assertEquals("VA", m.getPanelType());
+    }
+
+    @Test
     void characteristicsOfAnotherCategoryAreRejected() {
         assertThrows(IllegalStateException.class, () -> ProductBuilder.of(Category.ACCESSORY).refreshRateHz(144));
         assertThrows(IllegalStateException.class, () -> ProductBuilder.of(Category.MONITOR).cpu("Intel Core i9"));

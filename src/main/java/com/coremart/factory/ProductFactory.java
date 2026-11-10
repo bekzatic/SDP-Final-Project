@@ -46,6 +46,9 @@ public abstract class ProductFactory {
 
     /** Returns the creator responsible for a category. */
     public static ProductFactory forCategory(Category category) {
+        if (category == null) {
+            throw new IllegalArgumentException("Category is required");
+        }
         switch (category) {
             case LAPTOP:     return new LaptopFactory();
             case DESKTOP_PC: return new DesktopPCFactory();

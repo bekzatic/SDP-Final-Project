@@ -57,6 +57,16 @@ class ProductCatalogTest {
     }
 
     @Test
+    void productsHaveUniqueIdsAndTheListCannotBeChanged() {
+        List<Product> all = catalog.findAll();
+        assertEquals(all.size(), all.stream().map(Product::getId).distinct().count());
+        assertThrows(UnsupportedOperationException.class, () -> all.clear());
+        assertThrows(UnsupportedOperationException.class,
+                () -> catalog.findByCategory(Category.LAPTOP).add(all.get(0)));
+        assertEquals(all.size(), catalog.size());
+    }
+
+    @Test
     void findById() {
         Product first = catalog.findAll().get(0);
         assertEquals(first, catalog.findById(first.getId()).orElseThrow());
