@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Страница не найдена')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <section class="not-found">
+        <div class="not-found-code">404</div>
+        <h1>Страница не найдена</h1>
+        <p class="muted">Такого товара или страницы нет. Возможно, ссылка устарела.</p>
+        <a class="button" th:href="@{/catalog}">Перейти в каталог</a>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

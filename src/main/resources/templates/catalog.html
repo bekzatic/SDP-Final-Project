@@ -28,8 +28,10 @@
             <div class="card-body">
                 <span class="card-category" th:text="${p.category.displayName}">Ноутбуки</span>
                 <h2 class="card-title">
-                    <span class="card-brand" th:text="${p.brand}">Brand</span>
-                    <span th:text="${p.name}">Model</span>
+                    <a class="card-link" th:href="@{/product/{id}(id=${p.id})}">
+                        <span class="card-brand" th:text="${p.brand}">Brand</span>
+                        <span th:text="${p.name}">Model</span>
+                    </a>
                 </h2>
                 <ul class="card-specs">
                     <li th:each="s, st : ${p.specs}" th:if="${st.index < 3}">
