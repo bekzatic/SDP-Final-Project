@@ -23,9 +23,11 @@ class CoreMartApplicationTests {
     }
 
     @Test
-    void homePageIsServed() throws Exception {
+    void homePageShowsTheCatalog() throws Exception {
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("CoreMart")));
+                .andExpect(content().string(containsString("CoreMart")))
+                .andExpect(content().string(containsString("Каталог техники")))
+                .andExpect(content().string(containsString("IdeaPad Slim 5")));
     }
 }

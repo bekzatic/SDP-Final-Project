@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${selected != null ? selected.displayName : 'Каталог'})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <section class="hero">
+        <h1 th:text="${selected != null ? selected.displayName : 'Каталог техники'}">Каталог техники</h1>
+        <p class="muted">Ноутбуки, готовые компьютеры, мониторы и аксессуары от проверенных брендов.</p>
+    </section>
+
+    <nav class="chips" aria-label="Категории">
+        <a class="chip" th:classappend="${selected == null} ? 'active'" th:href="@{/catalog}">Все товары</a>
+        <a class="chip" th:each="c : ${categories}"
+           th:classappend="${c == selected} ? 'active'"
+           th:href="@{/catalog(category=${c.name()})}"
+           th:text="${c.displayName}">Категория</a>
+    </nav>
+
+    <p class="result-count muted" th:text="'Найдено товаров: ' + ${#lists.size(products)}">Найдено товаров: 0</p>
+
+    <div class="grid">
+        <article class="card" th:each="p : ${products}">
+            <div class="card-media" th:classappend="'cat-' + ${#strings.toLowerCase(p.category.name())}">
+                <th:block th:replace="~{fragments/layout :: icon(${p.category})}"></th:block>
+            </div>
+            <div class="card-body">
+                <span class="card-category" th:text="${p.category.displayName}">Ноутбуки</span>
+                <h2 class="card-title">
+                    <span class="card-brand" th:text="${p.brand}">Brand</span>
+                    <span th:text="${p.name}">Model</span>
+                </h2>
+                <ul class="card-specs">
+                    <li th:each="s, st : ${p.specs}" th:if="${st.index < 3}">
+                        <span class="muted" th:text="${s.key}">Характеристика</span>
+                        <span th:text="${s.value}">Значение</span>
+                    </li>
+                </ul>
+                <div class="card-footer">
+                    <span class="price" th:text="${p.formattedPrice}">0 ₸</span>
+                    <span th:if="${p.stock == 0}" class="badge badge-out">Нет в наличии</span>
+                    <span th:if="${p.stock > 0 and p.stock <= lowStock}" class="badge badge-low"
+                          th:text="'Мало: ' + ${p.stock} + ' шт.'">Мало</span>
+                    <span th:if="${p.stock > lowStock}" class="badge badge-in"
+                          th:text="'В наличии: ' + ${p.stock} + ' шт.'">В наличии</span>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <p class="empty muted" th:if="${#lists.isEmpty(products)}">В этой категории пока нет товаров.</p>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
