@@ -20,6 +20,8 @@
             <a th:href="@{/catalog(category='DESKTOP_PC')}">Готовые ПК</a>
             <a th:href="@{/catalog(category='MONITOR')}">Мониторы</a>
             <a th:href="@{/catalog(category='ACCESSORY')}">Аксессуары</a>
+            <a class="cart-link" th:href="@{/cart}">Корзина
+                <span class="cart-count" th:text="${cartCount} ?: 0">0</span></a>
         </nav>
     </div>
 </header>
@@ -30,6 +32,12 @@
         <span class="muted">Учебный проект по паттернам проектирования</span>
     </div>
 </footer>
+
+<!-- One-time messages after an action (added to cart, promo code applied, errors). -->
+<th:block th:fragment="flash">
+    <div class="flash flash-ok" th:if="${message}" th:text="${message}" role="status">Готово</div>
+    <div class="flash flash-error" th:if="${error}" th:text="${error}" role="alert">Ошибка</div>
+</th:block>
 
 <!-- Simple line icons for the product categories, drawn with SVG (no photos). -->
 <th:block th:fragment="icon(category)" th:switch="${category.name()}">

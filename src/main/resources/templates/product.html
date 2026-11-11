@@ -5,6 +5,8 @@
 <header th:replace="~{fragments/layout :: header}"></header>
 
 <main class="container">
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+
     <nav class="breadcrumbs">
         <a th:href="@{/catalog}">← Назад в каталог</a>
         <span class="muted">/</span>
@@ -33,6 +35,40 @@
                 <span th:if="${product.stock > lowStock}" class="badge badge-in"
                       th:text="'В наличии: ' + ${product.stock} + ' шт.'">В наличии</span>
             </div>
+
+            <form class="add-form" th:action="@{/cart/add}" method="post" th:if="${product.inStock}">
+                <input type="hidden" name="productId" th:value="${product.id}">
+
+                <fieldset class="services">
+                    <legend>Гарантия</legend>
+                    <label class="service">
+                        <input type="radio" name="addOns" value="" checked>
+                        <span>Стандартная гарантия производителя</span>
+                        <span class="muted">бесплатно</span>
+                    </label>
+                    <label class="service" th:each="t : ${warranties}">
+                        <input type="radio" name="addOns" th:value="${t.name()}">
+                        <span th:text="${t.label}">Гарантия +1 год</span>
+                        <span class="muted" th:text="'+ ' + ${addOnPrices.get(t)}">+ 0 ₸</span>
+                    </label>
+                </fieldset>
+
+                <fieldset class="services" th:if="${!#lists.isEmpty(extras)}">
+                    <legend>Услуги</legend>
+                    <label class="service" th:each="t : ${extras}">
+                        <input type="checkbox" name="addOns" th:value="${t.name()}">
+                        <span th:text="${t.label}">Услуга</span>
+                        <span class="muted" th:text="'+ ' + ${addOnPrices.get(t)}">+ 0 ₸</span>
+                    </label>
+                </fieldset>
+
+                <div class="add-row">
+                    <label for="quantity" class="muted">Количество</label>
+                    <input id="quantity" class="qty-input" type="number" name="quantity" value="1" min="1"
+                           th:max="${maxQuantity}">
+                    <button class="button" type="submit">В корзину</button>
+                </div>
+            </form>
 
             <h2 class="specs-title">Характеристики</h2>
             <table class="specs-table">
