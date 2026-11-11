@@ -1,9 +1,0 @@
-[S2-1] Composite: product bundles
-
-StoreItem is the common interface for anything that can go into the
-cart. ProductItem (leaf) wraps one catalog product, ProductBundle
-(composite) holds other store items, including other bundles. A bundle
-answers every question by asking its children: the price is the sum of
-the children minus the bundle discount, and it is available only when
-every child is in stock. Tests cover nesting, prices, availability and
-rejecting a bundle that would contain itself.

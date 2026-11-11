@@ -17,3 +17,6 @@ out/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+### IntelliJ module files ###
+*.iml
