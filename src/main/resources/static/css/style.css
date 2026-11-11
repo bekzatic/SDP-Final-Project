@@ -109,6 +109,25 @@ a:hover { text-decoration: underline; }
 
 .result-count { margin: 8px 0 18px; font-size: 14px; }
 
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+.toolbar .result-count { margin: 0; }
+.sort-form { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.sort-form select {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+}
+
 /* ---------- product grid ---------- */
 
 .grid {

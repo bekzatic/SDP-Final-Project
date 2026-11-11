@@ -3,6 +3,8 @@ package com.coremart.web;
 import com.coremart.catalog.ProductCatalog;
 import com.coremart.model.Category;
 import com.coremart.model.Product;
+import com.coremart.sorting.SortStrategies;
+import com.coremart.sorting.SortStrategy;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,8 @@ import java.util.Locale;
 
 /**
  * Catalog page: all products or the products of one category.
- * Data comes from the single {@link ProductCatalog} instance (Singleton).
+ * Data comes from the single {@link ProductCatalog} instance (Singleton); the order is chosen
+ * with a {@link SortStrategy} (Strategy) from the {@code sort} parameter.
  */
 @Controller
 public class CatalogController {
@@ -24,11 +27,15 @@ public class CatalogController {
     private final ProductCatalog catalog = ProductCatalog.getInstance();
 
     @GetMapping({"/", "/catalog"})
-    public String catalog(@RequestParam(name = "category", required = false) String category, Model model) {
+    public String catalog(@RequestParam(name = "category", required = false) String category,
+                          @RequestParam(name = "sort", required = false) String sort, Model model) {
         Category selected = parseCategory(category);
-        List<Product> products = catalog.findByCategory(selected);
+        SortStrategy strategy = SortStrategies.byCode(sort);
+        List<Product> products = strategy.sort(catalog.findByCategory(selected));
         model.addAttribute("categories", Category.values());
         model.addAttribute("selected", selected);
+        model.addAttribute("sorts", SortStrategies.all());
+        model.addAttribute("sort", strategy);
         model.addAttribute("products", products);
         model.addAttribute("lowStock", LOW_STOCK);
         return "catalog";

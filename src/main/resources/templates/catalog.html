@@ -11,14 +11,26 @@
     </section>
 
     <nav class="chips" aria-label="Категории">
-        <a class="chip" th:classappend="${selected == null} ? 'active'" th:href="@{/catalog}">Все товары</a>
+        <a class="chip" th:classappend="${selected == null} ? 'active'"
+           th:href="${sort.code == 'default'} ? @{/catalog} : @{/catalog(sort=${sort.code})}">Все товары</a>
         <a class="chip" th:each="c : ${categories}"
            th:classappend="${c == selected} ? 'active'"
-           th:href="@{/catalog(category=${c.name()})}"
+           th:href="${sort.code == 'default'} ? @{/catalog(category=${c.name()})} : @{/catalog(category=${c.name()},sort=${sort.code})}"
            th:text="${c.displayName}">Категория</a>
     </nav>
 
-    <p class="result-count muted" th:text="'Найдено товаров: ' + ${#lists.size(products)}">Найдено товаров: 0</p>
+    <div class="toolbar">
+        <p class="result-count muted" th:text="'Найдено товаров: ' + ${#lists.size(products)}">Найдено товаров: 0</p>
+        <form class="sort-form" th:action="@{/catalog}" method="get">
+            <input type="hidden" name="category" th:if="${selected != null}" th:value="${selected.name()}">
+            <label for="sort" class="muted">Сортировка:</label>
+            <select id="sort" name="sort" onchange="this.form.submit()">
+                <option th:each="s : ${sorts}" th:value="${s.code}" th:text="${s.label}"
+                        th:selected="${s.code == sort.code}">По умолчанию</option>
+            </select>
+            <noscript><button type="submit">Показать</button></noscript>
+        </form>
+    </div>
 
     <div class="grid">
         <article class="card" th:each="p : ${products}">
