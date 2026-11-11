@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${product.fullName})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <nav class="breadcrumbs">
+        <a th:href="@{/catalog}">← Назад в каталог</a>
+        <span class="muted">/</span>
+        <a th:href="@{/catalog(category=${product.category.name()})}" th:text="${product.category.displayName}">Категория</a>
+    </nav>
+
+    <article class="product">
+        <div class="product-media" th:classappend="'cat-' + ${#strings.toLowerCase(product.category.name())}">
+            <th:block th:replace="~{fragments/layout :: icon(${product.category})}"></th:block>
+        </div>
+
+        <div class="product-info">
+            <span class="card-category" th:text="${product.category.displayName}">Ноутбуки</span>
+            <h1 class="product-title">
+                <span class="card-brand" th:text="${product.brand}">Brand</span>
+                <span th:text="${product.name}">Model</span>
+            </h1>
+            <p class="product-description muted" th:if="${!#strings.isEmpty(product.description)}"
+               th:text="${product.description}">Описание</p>
+
+            <div class="buy-box">
+                <span class="price price-large" th:text="${product.formattedPrice}">0 ₸</span>
+                <span th:if="${product.stock == 0}" class="badge badge-out">Нет в наличии</span>
+                <span th:if="${product.stock > 0 and product.stock <= lowStock}" class="badge badge-low"
+                      th:text="'Мало: осталось ' + ${product.stock} + ' шт.'">Мало</span>
+                <span th:if="${product.stock > lowStock}" class="badge badge-in"
+                      th:text="'В наличии: ' + ${product.stock} + ' шт.'">В наличии</span>
+            </div>
+
+            <h2 class="specs-title">Характеристики</h2>
+            <table class="specs-table">
+                <tr><th>Бренд</th><td th:text="${product.brand}">Brand</td></tr>
+                <tr><th>Модель</th><td th:text="${product.name}">Model</td></tr>
+                <tr th:each="s : ${product.specs}">
+                    <th th:text="${s.key}">Характеристика</th>
+                    <td th:text="${s.value}">Значение</td>
+                </tr>
+            </table>
+        </div>
+    </article>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
