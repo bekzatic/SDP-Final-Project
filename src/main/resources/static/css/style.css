@@ -387,7 +387,7 @@ button.button { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
     border-radius: var(--radius);
 }
 .cart-line-title { margin: 0 0 4px; font-size: 17px; }
-.cart-line-details { margin: 0 0 6px; padding-left: 18px; font-size: 14px; color: var(--muted); }
+.cart-line-details { list-style: none; margin: 0 0 6px; padding: 0; font-size: 14px; color: var(--muted); }
 .cart-line-actions { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
 .qty-form { display: flex; align-items: center; gap: 8px; }
 
@@ -420,6 +420,32 @@ button.button { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
     .cart-layout { grid-template-columns: 1fr; }
     .cart-summary { position: static; }
 }
+
+/* ---------- bundles page ---------- */
+
+.bundle-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+.bundle {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+.bundle-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.bundle-head h2 { margin: 0; font-size: 20px; }
+.bundle-contents { flex: 1; margin: 0; padding-left: 18px; font-size: 15px; }
+.bundle-contents li { padding: 2px 0; }
+.bundle-contents li.nested { list-style: none; margin-left: 4px; color: var(--muted); font-size: 14px; }
+.bundle-prices { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.old-price { color: var(--muted); text-decoration: line-through; }
 
 /* ---------- small screens ---------- */
 

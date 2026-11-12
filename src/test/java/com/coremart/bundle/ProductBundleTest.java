@@ -45,6 +45,9 @@ class ProductBundleTest {
         assertEquals(358_200, bundle.getPrice());
         assertEquals(39_800, bundle.getSavings());
         assertEquals(2, bundle.getProducts().size());
+
+        ProductBundle odd = new ProductBundle("Округление", 8).add(accessory("A", 517_000));
+        assertEquals(475_600, odd.getPrice(), "475 640 is rounded down to 475 600");
     }
 
     @Test

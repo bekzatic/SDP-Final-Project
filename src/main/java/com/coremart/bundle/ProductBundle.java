@@ -92,10 +92,12 @@ public final class ProductBundle implements StoreItem {
         return name;
     }
 
+    /** Full price minus the discount, rounded down to a whole 100 ₸ in the customer's favour. */
     @Override
     public long getPrice() {
         long full = getFullPrice();
-        return full - full * discountPercent / 100;
+        long discounted = full - full * discountPercent / 100;
+        return discountPercent == 0 ? full : discounted / 100 * 100;
     }
 
     @Override

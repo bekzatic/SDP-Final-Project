@@ -1,6 +1,8 @@
 package com.coremart.web;
 
 import com.coremart.addon.AddOnType;
+import com.coremart.bundle.BundleCatalog;
+import com.coremart.bundle.ProductBundle;
 import com.coremart.bundle.ProductItem;
 import com.coremart.bundle.StoreItem;
 import com.coremart.cart.Cart;
@@ -22,9 +24,11 @@ public class CartController {
 
     private final ProductCatalog catalog = ProductCatalog.getInstance();
     private final Cart cart;
+    private final BundleCatalog bundles;
 
-    public CartController(Cart cart) {
+    public CartController(Cart cart, BundleCatalog bundles) {
         this.cart = cart;
+        this.bundles = bundles;
     }
 
     @GetMapping("/cart")
@@ -48,7 +52,20 @@ public class CartController {
         return addToCart(item, quantity, "/product/" + productId, redirect);
     }
 
-    String addToCart(StoreItem item, int quantity, String backUrl, RedirectAttributes redirect) {
+    /** Adds a whole bundle; the cart treats it like any other item (Composite). */
+    @PostMapping("/cart/add-bundle")
+    public String addBundle(@RequestParam("bundleId") String bundleId,
+                            @RequestParam(name = "quantity", defaultValue = "1") int quantity,
+                            RedirectAttributes redirect) {
+        Optional<ProductBundle> bundle = bundles.findById(bundleId);
+        if (bundle.isEmpty()) {
+            redirect.addFlashAttribute("error", "Комплект не найден");
+            return "redirect:/bundles";
+        }
+        return addToCart(bundle.get(), quantity, "/bundles", redirect);
+    }
+
+    private String addToCart(StoreItem item, int quantity, String backUrl, RedirectAttributes redirect) {
         try {
             cart.add(item, quantity);
         } catch (IllegalArgumentException | IllegalStateException e) {
