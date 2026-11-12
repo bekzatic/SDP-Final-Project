@@ -11,11 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A placed order (State context).
+ * A placed order.
  * <p>
- * The order does not check its status itself: {@link #pay()}, {@link #ship()} and the other
- * actions are passed to the current {@link OrderState}, which either moves the order on or
- * refuses.
+ * State context: the order does not check its status itself: {@link #pay()}, {@link #ship()}
+ * and the other actions are passed to the current {@link OrderState}, which either moves the
+ * order on or refuses.
+ * <p>
+ * Observer subject: {@link OrderObserver}s subscribe to the order and are told when it is placed
+ * and every time its status changes. The order does not know what they do with it.
  */
 public class Order {
 
@@ -33,8 +36,10 @@ public class Order {
     private final long deliveryCost;
     private final LocalDateTime createdAt = LocalDateTime.now();
     private final List<StatusChange> history = new ArrayList<>();
+    private final List<OrderObserver> observers = new ArrayList<>();
     private OrderState state = new NewState();
     private String paymentId;
+    private boolean placed;
 
     public Order(long id, CustomerInfo customer, DeliveryMethod delivery, PaymentMethod payment,
                  List<OrderLine> lines, long discount, String promoCode) {
@@ -93,10 +98,48 @@ public class Order {
         }
     }
 
-    /** Called by the states only. */
+    /** Called by the states only. Tells every observer about the change. */
     void changeState(OrderState next) {
+        OrderState previous = state;
         state = next;
         history.add(new StatusChange(next.getName(), LocalDateTime.now()));
+        for (OrderObserver observer : List.copyOf(observers)) {
+            observer.statusChanged(this, previous, next);
+        }
+    }
+
+    // ------------------------------------------------------------ observers
+
+    public void subscribe(OrderObserver observer) {
+        if (observer == null) {
+            throw new IllegalArgumentException("Observer is required");
+        }
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    public void unsubscribe(OrderObserver observer) {
+        observers.remove(observer);
+    }
+
+    public List<OrderObserver> getObservers() {
+        return Collections.unmodifiableList(observers);
+    }
+
+    /** Announces the new order to the observers. Done once, right after checkout. */
+    public void place() {
+        if (placed) {
+            throw new IllegalStateException("Order " + number + " is already placed");
+        }
+        placed = true;
+        for (OrderObserver observer : List.copyOf(observers)) {
+            observer.orderPlaced(this);
+        }
+    }
+
+    public boolean isPlaced() {
+        return placed;
     }
 
     // ------------------------------------------------------------ status
