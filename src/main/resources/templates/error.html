@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Ошибка')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <section class="not-found">
+        <div class="not-found-code" th:text="${status} ?: 'Ошибка'">500</div>
+        <h1>Что-то пошло не так</h1>
+        <p class="muted" th:if="${status == 400}">Запрос не понят: похоже, в ссылке или форме ошибка.</p>
+        <p class="muted" th:if="${status == 404}">Такой страницы нет. Возможно, ссылка устарела.</p>
+        <p class="muted" th:unless="${status == 400 or status == 404}">Попробуйте ещё раз чуть позже.</p>
+        <a class="button" th:href="@{/catalog}">Перейти в каталог</a>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
