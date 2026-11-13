@@ -21,6 +21,7 @@
             <a th:href="@{/catalog(category='MONITOR')}">Мониторы</a>
             <a th:href="@{/catalog(category='ACCESSORY')}">Аксессуары</a>
             <a th:href="@{/bundles}">Комплекты</a>
+            <a th:href="@{/orders}">Мои заказы</a>
             <a class="cart-link" th:href="@{/cart}">Корзина
                 <span class="cart-count" th:text="${cartCount} ?: 0">0</span></a>
         </nav>
@@ -39,6 +40,11 @@
     <div class="flash flash-ok" th:if="${message}" th:text="${message}" role="status">Готово</div>
     <div class="flash flash-error" th:if="${error}" th:text="${error}" role="alert">Ошибка</div>
 </th:block>
+
+<!-- Order status badge; the colour comes from the state code (NEW, PAID, ...). -->
+<span th:fragment="status(order)" class="status"
+      th:classappend="'status-' + ${#strings.toLowerCase(order.state.code)}"
+      th:text="${order.statusName}">Статус</span>
 
 <!-- Simple line icons for the product categories, drawn with SVG (no photos). -->
 <th:block th:fragment="icon(category)" th:switch="${category.name()}">

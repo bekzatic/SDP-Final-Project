@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Мои заказы')}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <section class="hero">
+        <h1>Мои заказы</h1>
+        <p class="muted" th:text="${#lists.isEmpty(orders)} ? 'Заказов пока нет.' : 'Заказов: ' + ${#lists.size(orders)}">
+            Заказов пока нет.</p>
+    </section>
+
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+
+    <div class="empty-cart" th:if="${#lists.isEmpty(orders)}">
+        <p class="muted">Здесь появятся заказы, оформленные в этом браузере.</p>
+        <a class="button" th:href="@{/catalog}">Перейти в каталог</a>
+    </div>
+
+    <div class="cart-lines orders-list" th:unless="${#lists.isEmpty(orders)}">
+        <a class="cart-line order-row" th:each="o : ${orders}" th:href="@{/orders/{n}(n=${o.number})}">
+            <div class="cart-line-info">
+                <h2 class="cart-line-title" th:text="'Заказ ' + ${o.number}">Заказ CM-1001</h2>
+                <span class="muted" th:text="${o.createdAtText} + ' · товаров: ' + ${o.itemCount}">дата</span>
+            </div>
+            <div class="cart-line-actions">
+                <span th:replace="~{fragments/layout :: status(${o})}"></span>
+                <span class="price" th:text="${o.formattedTotal}">0 ₸</span>
+            </div>
+        </a>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>

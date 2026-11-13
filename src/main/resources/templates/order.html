@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Заказ ' + ${order.number})}"></head>
+<body>
+<header th:replace="~{fragments/layout :: header}"></header>
+
+<main class="container">
+    <nav class="breadcrumbs" aria-label="Навигация">
+        <a th:href="@{/orders}">Мои заказы</a><span class="muted">/</span>
+        <span th:text="${order.number}">CM-1001</span>
+    </nav>
+
+    <section class="order-head">
+        <div>
+            <h1 th:text="'Заказ ' + ${order.number}">Заказ CM-1001</h1>
+            <p class="muted" th:text="'Оформлен ' + ${order.createdAtText}">Оформлен</p>
+        </div>
+        <span th:replace="~{fragments/layout :: status(${order})}"></span>
+    </section>
+
+    <th:block th:replace="~{fragments/layout :: flash}"></th:block>
+
+    <div class="cart-layout">
+        <section class="cart-lines">
+            <div class="state-box">
+                <p class="state-text" th:text="${order.state.description}">Что происходит с заказом</p>
+                <div class="state-actions" th:unless="${#lists.isEmpty(order.customerActions)}">
+                    <form th:each="a : ${order.customerActions}" method="post"
+                          th:action="@{/orders/{n}/{act}(n=${order.number}, act=${#strings.toLowerCase(a.name())})}">
+                        <button type="submit" th:text="${a.label}"
+                                th:class="${a.name() == 'PAY'} ? 'button' : 'link-button danger'">Действие</button>
+                    </form>
+                </div>
+            </div>
+
+            <article class="cart-line" th:each="line : ${order.lines}">
+                <div class="cart-line-info">
+                    <h2 class="cart-line-title" th:text="${line.title}">Товар</h2>
+                    <ul class="cart-line-details" th:if="${!#lists.isEmpty(line.details)}">
+                        <li th:each="d : ${line.details}" th:text="${d}">Деталь</li>
+                    </ul>
+                    <span class="muted" th:text="${line.formattedUnitPrice} + ' × ' + ${line.quantity}">0 ₸ × 1</span>
+                </div>
+                <span class="price" th:text="${line.formattedTotal}">0 ₸</span>
+            </article>
+
+            <div class="info-grid">
+                <section class="info-card">
+                    <h2>История</h2>
+                    <ol class="timeline">
+                        <li th:each="h : ${order.history}">
+                            <span th:text="${h.status}">Статус</span>
+                            <span class="muted" th:text="${h.timeText}">время</span>
+                        </li>
+                    </ol>
+                </section>
+                <section class="info-card">
+                    <h2>Уведомления на email</h2>
+                    <p class="muted small" th:text="${order.customer.email}">email</p>
+                    <ul class="mail-list">
+                        <li th:each="n : ${emails}">
+                            <span class="muted" th:text="${n.timeText}">время</span>
+                            <span th:text="${n.text}">Текст</span>
+                        </li>
+                    </ul>
+                </section>
+            </div>
+        </section>
+
+        <aside class="cart-summary">
+            <h2>Итого</h2>
+            <div class="summary-row">
+                <span class="muted">Товары</span>
+                <span th:text="${order.formattedSubtotal}">0 ₸</span>
+            </div>
+            <div class="summary-row" th:if="${order.discount > 0}">
+                <span class="muted" th:text="'Промокод ' + ${order.promoCode}">Промокод</span>
+                <span class="discount" th:text="'− ' + ${order.formattedDiscount}">− 0 ₸</span>
+            </div>
+            <div class="summary-row">
+                <span class="muted" th:text="${order.delivery.label}">Доставка</span>
+                <span th:text="${order.formattedDeliveryCost}">0 ₸</span>
+            </div>
+            <div class="summary-row summary-total">
+                <span th:text="${order.paymentId != null} ? 'Оплачено' : 'К оплате'">К оплате</span>
+                <span th:text="${order.formattedTotal}">0 ₸</span>
+            </div>
+            <dl class="order-facts">
+                <dt>Получатель</dt>
+                <dd th:text="${order.customer.name} + ', ' + ${order.customer.phone}">Имя</dd>
+                <th:block th:if="${!#strings.isEmpty(order.customer.address)}">
+                    <dt>Адрес</dt>
+                    <dd th:text="${order.customer.address}">Адрес</dd>
+                </th:block>
+                <dt>Оплата</dt>
+                <dd th:text="${order.paymentId != null} ? 'Оплачено, платёж ' + ${order.paymentId} : ${order.payment.label}">Оплата</dd>
+            </dl>
+        </aside>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+</body>
+</html>
