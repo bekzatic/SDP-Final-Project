@@ -130,7 +130,8 @@ public class CheckoutFacade {
         for (Map.Entry<Product, Integer> e : needed.entrySet()) {
             int left = catalog.findById(e.getKey().getId()).map(Product::getStock).orElse(0);
             if (left < e.getValue()) {
-                return "“" + e.getKey().getFullName() + "”: only " + left + " left in stock, please change the quantity in your cart";
+                return "“" + e.getKey().getFullName() + "”: only " + left
+                        + " left in stock, please change the quantity in your cart";
             }
         }
         return "Some items are out of stock, please check your cart";
