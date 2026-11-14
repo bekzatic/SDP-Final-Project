@@ -21,7 +21,6 @@ import java.util.Locale;
 @Controller
 public class CatalogController {
 
-    /** Products with this many items or fewer are marked as "low stock". */
     public static final int LOW_STOCK = 3;
 
     private final ProductCatalog catalog = ProductCatalog.getInstance();

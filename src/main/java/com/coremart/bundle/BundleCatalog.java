@@ -55,7 +55,6 @@ public class BundleCatalog {
                 .orElseThrow(() -> new IllegalStateException("No product '" + fullName + "' in the catalog"));
     }
 
-    /** Bundles by id, in the order they are shown. */
     public Map<String, ProductBundle> getAll() {
         return Collections.unmodifiableMap(bundles);
     }

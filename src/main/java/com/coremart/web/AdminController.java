@@ -27,7 +27,6 @@ import java.util.Optional;
 @Controller
 public class AdminController {
 
-    /** At most this many items can be added to stock at once. */
     public static final int MAX_RESTOCK = 100;
 
     private final ProductCatalog catalog = ProductCatalog.getInstance();

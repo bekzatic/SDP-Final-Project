@@ -66,12 +66,10 @@ public abstract class Product {
         this.stock = stock;
     }
 
-    /** Brand and model, e.g. "Lenovo IdeaPad Slim 5". */
     public String getFullName() {
         return brand + " " + name;
     }
 
-    /** Price as shown in the store, e.g. "389 000 ₸". */
     public String getFormattedPrice() {
         return formatTenge(price);
     }

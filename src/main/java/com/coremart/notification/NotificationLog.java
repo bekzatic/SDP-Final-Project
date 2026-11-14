@@ -23,12 +23,10 @@ public class NotificationLog {
         log.info("[{}] to {}: {}", notification.channel(), notification.recipient(), notification.text());
     }
 
-    /** Messages about one order, oldest first. */
     public synchronized List<Notification> forOrder(String orderNumber) {
         return sent.stream().filter(n -> n.orderNumber().equals(orderNumber)).toList();
     }
 
-    /** Messages of one channel, newest first. */
     public synchronized List<Notification> latest(String channel, int limit) {
         List<Notification> result = new ArrayList<>();
         for (int i = sent.size() - 1; i >= 0 && result.size() < limit; i--) {

@@ -65,8 +65,6 @@ public class Order {
         history.add(new StatusChange(state.getName(), createdAt));
     }
 
-    // ------------------------------------------------------------ actions (passed to the state)
-
     public void pay() {
         state.pay(this);
     }
@@ -108,8 +106,6 @@ public class Order {
         }
     }
 
-    // ------------------------------------------------------------ observers
-
     public void subscribe(OrderObserver observer) {
         if (observer == null) {
             throw new IllegalArgumentException("Observer is required");
@@ -142,8 +138,6 @@ public class Order {
         return placed;
     }
 
-    // ------------------------------------------------------------ status
-
     public OrderState getState() {
         return state;
     }
@@ -175,8 +169,6 @@ public class Order {
         this.paymentId = paymentId;
     }
 
-    // ------------------------------------------------------------ contents
-
     public long getId() { return id; }
     public String getNumber() { return number; }
     public CustomerInfo getCustomer() { return customer; }
@@ -194,7 +186,6 @@ public class Order {
         return lines.stream().mapToInt(OrderLine::getQuantity).sum();
     }
 
-    /** How many of each product the order takes from the warehouse. */
     public Map<Product, Integer> getRequiredStock() {
         Map<Product, Integer> needed = new LinkedHashMap<>();
         for (OrderLine line : lines) {
@@ -204,8 +195,6 @@ public class Order {
         }
         return needed;
     }
-
-    // ------------------------------------------------------------ money
 
     public long getSubtotal() { return subtotal; }
     public long getDiscount() { return discount; }

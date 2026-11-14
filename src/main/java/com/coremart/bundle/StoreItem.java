@@ -14,13 +14,11 @@ import java.util.List;
  */
 public interface StoreItem {
 
-    /** Name shown in the cart, e.g. "Lenovo IdeaPad Slim 5" or "Gaming setup". */
     String getTitle();
 
     /** Price of one item in tenge, including discounts and services. */
     long getPrice();
 
-    /** True when every product inside the item is in stock. */
     boolean isAvailable();
 
     /** Lines that describe what the item consists of (bundle contents, services). */

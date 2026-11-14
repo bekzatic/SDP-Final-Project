@@ -16,16 +16,13 @@ import java.util.List;
  */
 public interface OrderState {
 
-    /** Stable code, e.g. "PAID". */
     String getCode();
 
-    /** Status as the customer sees it, e.g. "Paid". */
     String getName();
 
     /** One sentence about what happens now. */
     String getDescription();
 
-    /** Actions allowed in this status. */
     List<OrderAction> getAvailableActions();
 
     default void pay(Order order) {

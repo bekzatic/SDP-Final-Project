@@ -9,10 +9,8 @@ package com.coremart.order;
  */
 public interface OrderObserver {
 
-    /** The order has just been placed. */
     default void orderPlaced(Order order) {
     }
 
-    /** The order moved from one status to another. */
     void statusChanged(Order order, OrderState from, OrderState to);
 }

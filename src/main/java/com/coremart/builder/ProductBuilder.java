@@ -56,15 +56,11 @@ public final class ProductBuilder {
         return new ProductBuilder(category);
     }
 
-    // ------------------------------------------------------------ common fields
-
     public ProductBuilder name(String name) { this.name = name; return this; }
     public ProductBuilder brand(String brand) { this.brand = brand; return this; }
     public ProductBuilder price(long priceTenge) { this.price = priceTenge; return this; }
     public ProductBuilder stock(int stock) { this.stock = stock; return this; }
     public ProductBuilder description(String description) { this.description = description; return this; }
-
-    // ------------------------------------------------------------ characteristics
 
     public ProductBuilder cpu(String cpu) { return attr("cpu", cpu); }
     public ProductBuilder ramGb(int gb) { return attr("ramGb", gb); }
@@ -90,9 +86,6 @@ public final class ProductBuilder {
         return this;
     }
 
-    // ------------------------------------------------------------ build
-
-    /** Checks the collected data and creates the product through the category's factory. */
     public Product build() {
         if (name == null || name.isBlank()) {
             throw new IllegalStateException("Name is required");

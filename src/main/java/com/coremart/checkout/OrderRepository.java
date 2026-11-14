@@ -30,7 +30,6 @@ public class OrderRepository {
         return Optional.ofNullable(number == null ? null : orders.get(number.trim().toUpperCase()));
     }
 
-    /** Newest orders first. */
     public synchronized List<Order> findAll() {
         List<Order> all = new ArrayList<>(orders.values());
         Collections.reverse(all);

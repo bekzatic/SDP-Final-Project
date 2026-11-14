@@ -24,7 +24,6 @@ public class CustomerOrders {
         return orderNumber != null && numbers.contains(orderNumber.trim().toUpperCase());
     }
 
-    /** Newest first. */
     public List<String> getNumbers() {
         List<String> copy = new ArrayList<>(numbers);
         Collections.reverse(copy);

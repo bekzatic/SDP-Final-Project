@@ -5,7 +5,7 @@ import com.coremart.bundle.StoreItem;
 /**
  * DECORATOR pattern - a <b>Concrete Decorator</b>: extended warranty.
  * <p>
- * Costs 10% of the wrapped item's price per year (rounded up to 100 ₸), but at least 5 000 ₸.
+ * Costs 10% of the wrapped item's price per year (rounded up to 100 ₸), but at least 5,000 ₸.
  */
 public class WarrantyAddOn extends AddOnDecorator {
 

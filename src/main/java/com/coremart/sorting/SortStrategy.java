@@ -13,10 +13,8 @@ import java.util.List;
  */
 public interface SortStrategy {
 
-    /** Value used in the URL, e.g. {@code price-asc}. */
     String getCode();
 
-    /** Text shown in the drop-down. */
     String getLabel();
 
     /** Returns a new sorted list; the given list is not changed. */

@@ -41,7 +41,6 @@ public final class OrderLine {
     public long getUnitPrice() { return unitPrice; }
     public int getQuantity() { return quantity; }
 
-    /** Products inside one unit of this line (several for a bundle). */
     public List<Product> getProducts() { return products; }
 
     public long getTotal() {

@@ -12,7 +12,7 @@ import java.util.Optional;
 /**
  * SINGLETON pattern - the <b>Singleton</b>.
  * <p>
- * The store has exactly one catalog: every page, test and (later) the cart must see the same
+ * The store has exactly one catalog: every page, test and the cart must see the same
  * products and the same stock levels. The constructor is private and the only instance is
  * created lazily by the <i>initialization-on-demand holder</i> idiom: the JVM loads
  * {@link Holder} on the first call to {@link #getInstance()}, and class loading is
@@ -32,12 +32,9 @@ public final class ProductCatalog {
         private static final ProductCatalog INSTANCE = new ProductCatalog();
     }
 
-    /** Returns the single catalog of the store. */
     public static ProductCatalog getInstance() {
         return Holder.INSTANCE;
     }
-
-    // ------------------------------------------------------------ queries
 
     public List<Product> findAll() {
         synchronized (products) {
@@ -70,9 +67,6 @@ public final class ProductCatalog {
         }
     }
 
-    // ------------------------------------------------------------ stock
-
-    /** Takes items from stock; throws when fewer than {@code quantity} are left. */
     public void decreaseStock(long id, int quantity) {
         checkQuantity(quantity);
         synchronized (products) {
@@ -85,7 +79,6 @@ public final class ProductCatalog {
         }
     }
 
-    /** Returns items to stock, e.g. when an order is cancelled. */
     public void increaseStock(long id, int quantity) {
         checkQuantity(quantity);
         synchronized (products) {
@@ -107,8 +100,6 @@ public final class ProductCatalog {
     private void add(Product p) {
         products.put(p.getId(), p);
     }
-
-    // ------------------------------------------------------------ seed data
 
     private void seed() {
         // Laptops

@@ -77,8 +77,6 @@ public class CheckoutController {
         return "checkout";
     }
 
-    // ------------------------------------------------------------ my orders
-
     @GetMapping("/orders")
     public String myOrders(Model model) {
         List<Order> orders = myOrders.getNumbers().stream()

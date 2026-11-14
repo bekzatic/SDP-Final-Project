@@ -42,14 +42,12 @@ public enum AddOnType {
         return label;
     }
 
-    /** Wraps the item in this service's decorator. */
     public abstract StoreItem wrap(StoreItem item);
 
     public boolean appliesTo(StoreItem item) {
         return true;
     }
 
-    /** Price of this service for the given item. */
     public long priceFor(StoreItem item) {
         return ((AddOnDecorator) wrap(item)).getAddOnPrice();
     }

@@ -41,10 +41,8 @@ public abstract class ProductFactory {
     /** Attribute keys this product type needs, checked before the factory method runs. */
     public abstract List<String> requiredAttributes();
 
-    /** The category of products this factory creates. */
     public abstract Category getCategory();
 
-    /** Returns the creator responsible for a category. */
     public static ProductFactory forCategory(Category category) {
         if (category == null) {
             throw new IllegalArgumentException("Category is required");

@@ -67,7 +67,6 @@ public class CheckoutFacade {
         return order;
     }
 
-    /** Pays an order that was placed with "pay later". */
     public Order pay(String orderNumber) {
         Order order = find(orderNumber);
         if (!order.getState().allows(OrderAction.PAY)) {
@@ -107,8 +106,6 @@ public class CheckoutFacade {
     public List<Order> allOrders() {
         return orders.findAll();
     }
-
-    // ------------------------------------------------------------ steps
 
     private Order find(String orderNumber) {
         return orders.findByNumber(orderNumber)

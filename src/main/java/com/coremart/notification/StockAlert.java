@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class StockAlert implements OrderObserver {
 
-    /** Products with this many items or fewer need restocking. */
     public static final int THRESHOLD = 3;
 
     private final NotificationLog log;

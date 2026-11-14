@@ -34,8 +34,6 @@ public class Cart {
     private DiscountStrategy discount = new NoDiscount();
     private String promoCode;
 
-    // ------------------------------------------------------------ lines
-
     public CartLine add(StoreItem item, int quantity) {
         if (item == null) {
             throw new IllegalArgumentException("Item is required");
@@ -79,7 +77,6 @@ public class Cart {
         return lines.isEmpty();
     }
 
-    /** Number of items, counting quantities. */
     public int getItemCount() {
         return lines.stream().mapToInt(CartLine::getQuantity).sum();
     }
@@ -120,8 +117,6 @@ public class Cart {
         }
     }
 
-    // ------------------------------------------------------------ discount
-
     /** Applies a promo code; returns false and keeps the current discount if the code is unknown. */
     public boolean applyPromoCode(String code) {
         Optional<DiscountStrategy> strategy = PromoCodes.find(code);
@@ -145,8 +140,6 @@ public class Cart {
     public DiscountStrategy getDiscountStrategy() {
         return discount;
     }
-
-    // ------------------------------------------------------------ totals
 
     public long getSubtotal() {
         return lines.stream().mapToLong(CartLine::getTotal).sum();

@@ -23,7 +23,6 @@ public class PaymentService {
     private final Map<String, Long> payments = new LinkedHashMap<>();
     private final Set<String> refunded = new HashSet<>();
 
-    /** Takes the money for an order; returns the payment id. */
     public synchronized String charge(String orderNumber, long amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be positive");
