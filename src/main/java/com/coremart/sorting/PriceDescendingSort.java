@@ -14,7 +14,7 @@ public class PriceDescendingSort extends ComparatorSort {
 
     @Override
     public String getLabel() {
-        return "Сначала дороже";
+        return "Price: high to low";
     }
 
     @Override

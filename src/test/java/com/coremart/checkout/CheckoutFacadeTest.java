@@ -73,7 +73,7 @@ class CheckoutFacadeTest {
     }
 
     private static CheckoutForm form(DeliveryMethod delivery, PaymentMethod payment) {
-        return new CheckoutForm("Айгерим", "+7 701 123 45 67", "aigerim@example.com", "ул. Абая, 10",
+        return new CheckoutForm("Aigerim", "+7 701 123 45 67", "aigerim@example.com", "10 Abai St.",
                 delivery, payment);
     }
 
@@ -157,8 +157,8 @@ class CheckoutFacadeTest {
 
         CheckoutException e = assertThrows(CheckoutException.class, () -> facade.placeOrder(cart, bad));
 
-        assertEquals(List.of("Укажите имя", "Укажите телефон, например +7 701 123 45 67",
-                "Укажите email, на него придут уведомления о заказе", "Укажите адрес доставки"), e.getErrors());
+        assertEquals(List.of("Enter your name", "Enter a phone number, e.g. +7 701 123 45 67",
+                "Enter an email for order notifications", "Enter a delivery address"), e.getErrors());
         assertEquals(mice, mouse.getStock());
         assertFalse(cart.isEmpty());
         assertEquals(0, orders.size());
@@ -168,7 +168,7 @@ class CheckoutFacadeTest {
     void emptyCartCannotBeOrdered() {
         CheckoutException e = assertThrows(CheckoutException.class,
                 () -> facade.placeOrder(cart, form(DeliveryMethod.PICKUP, PaymentMethod.CARD_NOW)));
-        assertEquals(List.of("Корзина пуста"), e.getErrors());
+        assertEquals(List.of("Your cart is empty"), e.getErrors());
     }
 
     @Test
@@ -181,7 +181,7 @@ class CheckoutFacadeTest {
         CheckoutException e = assertThrows(CheckoutException.class,
                 () -> facade.placeOrder(cart, form(DeliveryMethod.PICKUP, PaymentMethod.CARD_NOW)));
 
-        assertTrue(e.getMessage().startsWith("«Logitech MX Keys S»: в наличии только 1 шт."));
+        assertTrue(e.getMessage().startsWith("“Logitech MX Keys S”: only 1 left in stock"));
         assertEquals(mice, mouse.getStock(), "the mouse taken first was put back");
         assertEquals(1, keyboard.getStock());
         assertEquals(0, orders.size());
@@ -191,7 +191,7 @@ class CheckoutFacadeTest {
     void lowStockAfterAnOrderAlertsTheWarehouse() {
         cart.add(new ProductItem(keyboard), keyboard.getStock() - 2);
         Order order = facade.placeOrder(cart, form(DeliveryMethod.PICKUP, PaymentMethod.LATER));
-        assertEquals("Заканчивается «Logitech MX Keys S»: осталось 2 шт.",
+        assertEquals("Running low on “Logitech MX Keys S”: 2 left",
                 log.latest(Notification.WAREHOUSE, 1).get(0).text());
         assertEquals(order.getNumber(), log.latest(Notification.WAREHOUSE, 1).get(0).orderNumber());
     }

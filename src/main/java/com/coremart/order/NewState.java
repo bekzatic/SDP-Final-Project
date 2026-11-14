@@ -12,12 +12,12 @@ public class NewState implements OrderState {
 
     @Override
     public String getName() {
-        return "Ожидает оплаты";
+        return "Awaiting payment";
     }
 
     @Override
     public String getDescription() {
-        return "Заказ оформлен. Сборка начнётся после оплаты.";
+        return "Order placed. Assembly starts after payment.";
     }
 
     @Override

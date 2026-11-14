@@ -9,7 +9,7 @@ package com.coremart.pricing;
  */
 public interface DiscountStrategy {
 
-    /** Short text for the cart, e.g. "Скидка 10%, не больше 50 000 ₸". */
+    /** Short text for the cart, e.g. "Discount 10%, up to 50,000 ₸". */
     String getDescription();
 
     /** Discount in tenge for the given subtotal; never negative and never above the subtotal. */

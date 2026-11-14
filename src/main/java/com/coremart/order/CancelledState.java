@@ -12,12 +12,12 @@ public class CancelledState implements OrderState {
 
     @Override
     public String getName() {
-        return "Отменён";
+        return "Cancelled";
     }
 
     @Override
     public String getDescription() {
-        return "Заказ отменён.";
+        return "The order has been cancelled.";
     }
 
     @Override

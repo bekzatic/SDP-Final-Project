@@ -220,7 +220,7 @@ public class Order {
     public String getFormattedTotal() { return Product.formatTenge(getTotal()); }
 
     public String getFormattedDeliveryCost() {
-        return deliveryCost == 0 ? "бесплатно" : Product.formatTenge(deliveryCost);
+        return deliveryCost == 0 ? "free" : Product.formatTenge(deliveryCost);
     }
 
     @Override

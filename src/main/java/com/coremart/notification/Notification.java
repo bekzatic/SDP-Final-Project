@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 public record Notification(String orderNumber, String channel, String recipient, String text, LocalDateTime time) {
 
     public static final String EMAIL = "Email";
-    public static final String WAREHOUSE = "Склад";
+    public static final String WAREHOUSE = "Warehouse";
 
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("dd.MM HH:mm");
 

@@ -49,11 +49,11 @@ class ProductPageTest {
         Product monitor = catalog.findByCategory(Category.MONITOR).get(0);
         mvc.perform(get("/product/" + monitor.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Назад в каталог")))
+                .andExpect(content().string(containsString("Back to catalog")))
                 .andExpect(content().string(containsString("href=\"/catalog\"")))
                 .andExpect(content().string(containsString("href=\"/catalog?category=MONITOR\"")))
-                .andExpect(content().string(containsString("Характеристики")))
-                .andExpect(content().string(containsString(monitor.getStock() + " шт.")));
+                .andExpect(content().string(containsString("Specifications")))
+                .andExpect(content().string(containsString(monitor.getStock() + " pcs.")));
     }
 
     @Test
@@ -62,8 +62,8 @@ class ProductPageTest {
             mvc.perform(get("/product/" + id))
                     .andExpect(status().isNotFound())
                     .andExpect(view().name("error/404"))
-                    .andExpect(content().string(containsString("Страница не найдена")))
-                    .andExpect(content().string(containsString("Перейти в каталог")));
+                    .andExpect(content().string(containsString("Page not found")))
+                    .andExpect(content().string(containsString("Go to catalog")));
         }
     }
 

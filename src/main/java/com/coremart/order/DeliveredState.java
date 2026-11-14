@@ -12,12 +12,12 @@ public class DeliveredState implements OrderState {
 
     @Override
     public String getName() {
-        return "Получен";
+        return "Delivered";
     }
 
     @Override
     public String getDescription() {
-        return "Заказ получен. Спасибо за покупку!";
+        return "Order received. Thank you for shopping with us!";
     }
 
     @Override

@@ -8,17 +8,17 @@ import java.util.Locale;
 final class Specs {
 
     private static final DecimalFormat DECIMAL =
-            new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.forLanguageTag("ru")));
+            new DecimalFormat("0.#", DecimalFormatSymbols.getInstance(Locale.US));
 
     private Specs() {
     }
 
-    /** 512 -> "512 ГБ SSD", 1000 -> "1 ТБ SSD". */
+    /** 512 -> "512 GB SSD", 1000 -> "1 TB SSD". */
     static String storage(int gb) {
-        return (gb >= 1000 && gb % 1000 == 0 ? (gb / 1000) + " ТБ" : gb + " ГБ") + " SSD";
+        return (gb >= 1000 && gb % 1000 == 0 ? (gb / 1000) + " TB" : gb + " GB") + " SSD";
     }
 
-    /** 15.6 -> "15,6″". */
+    /** 15.6 -> "15.6″". */
     static String inches(double value) {
         return decimal(value) + "″";
     }

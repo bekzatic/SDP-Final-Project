@@ -42,7 +42,7 @@ public class Cart {
         }
         checkQuantity(quantity);
         if (!item.isAvailable()) {
-            throw new IllegalStateException("«" + item.getTitle() + "» нет в наличии");
+            throw new IllegalStateException("“" + item.getTitle() + "” is out of stock");
         }
         checkStock(item, quantity, null);
         CartLine line = new CartLine(nextLineId++, item, quantity);
@@ -108,15 +108,15 @@ public class Cart {
         }
         for (Map.Entry<Product, Integer> e : needed.entrySet()) {
             if (e.getValue() > e.getKey().getStock()) {
-                throw new IllegalStateException("«" + e.getKey().getFullName() + "»: в наличии только "
-                        + e.getKey().getStock() + " шт.");
+                throw new IllegalStateException("“" + e.getKey().getFullName() + "”: only "
+                        + e.getKey().getStock() + " left in stock");
             }
         }
     }
 
     private static void checkQuantity(int quantity) {
         if (quantity < 1 || quantity > MAX_QUANTITY) {
-            throw new IllegalArgumentException("Количество должно быть от 1 до " + MAX_QUANTITY);
+            throw new IllegalArgumentException("Quantity must be between 1 and " + MAX_QUANTITY);
         }
     }
 

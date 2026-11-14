@@ -19,18 +19,18 @@ public class EmailNotifier implements OrderObserver {
 
     @Override
     public void orderPlaced(Order order) {
-        String text = "Заказ " + order.getNumber() + " оформлен. Сумма: " + order.getFormattedTotal() + ".";
+        String text = "Order " + order.getNumber() + " placed. Total: " + order.getFormattedTotal() + ".";
         if (order.getPayment() == PaymentMethod.LATER) {
-            text += " Оплатить его можно в разделе «Мои заказы».";
+            text += " You can pay for it in “My orders”.";
         }
         send(order, text);
     }
 
     @Override
     public void statusChanged(Order order, OrderState from, OrderState to) {
-        String text = "Заказ " + order.getNumber() + ": «" + to.getName() + "». " + to.getDescription();
+        String text = "Order " + order.getNumber() + ": “" + to.getName() + "”. " + to.getDescription();
         if (to instanceof CancelledState && order.getPaymentId() != null) {
-            text += " Деньги вернутся на карту в течение 3 рабочих дней.";
+            text += " The money will be returned to your card within 3 business days.";
         }
         send(order, text);
     }

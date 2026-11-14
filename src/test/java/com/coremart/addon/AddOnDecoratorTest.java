@@ -23,7 +23,7 @@ class AddOnDecoratorTest {
             .brand("Lenovo").name("IdeaPad Slim 5").price(389_000).stock(5)
             .cpu("AMD Ryzen 5 7530U").ramGb(16).storageGb(512).screenInches(15.6).weightKg(1.7).build();
     private static final Product MOUSE = ProductBuilder.of(Category.ACCESSORY)
-            .brand("Logitech").name("M185").price(9_000).stock(25).type("Мышь").build();
+            .brand("Logitech").name("M185").price(9_000).stock(25).type("Mouse").build();
 
     @Test
     void decoratorAddsItsPriceAndKeepsTheTitle() {
@@ -39,7 +39,7 @@ class AddOnDecoratorTest {
         assertEquals(38_900, new WarrantyAddOn(new ProductItem(LAPTOP), 1).getAddOnPrice());
         assertEquals(77_800, new WarrantyAddOn(new ProductItem(LAPTOP), 2).getAddOnPrice());
         assertEquals(5_000, new WarrantyAddOn(new ProductItem(MOUSE), 1).getAddOnPrice());
-        assertEquals("Расширенная гарантия +2 года", new WarrantyAddOn(new ProductItem(LAPTOP), 2).getAddOnName());
+        assertEquals("Extended warranty +2 years", new WarrantyAddOn(new ProductItem(LAPTOP), 2).getAddOnName());
         assertThrows(IllegalArgumentException.class, () -> new WarrantyAddOn(new ProductItem(LAPTOP), 0));
         assertThrows(IllegalArgumentException.class, () -> new WarrantyAddOn(new ProductItem(LAPTOP), 4));
     }
@@ -50,17 +50,17 @@ class AddOnDecoratorTest {
         assertEquals(389_000 + 38_900 + 15_000 + 3_000, item.getPrice());
         List<String> details = item.getDetails();
         assertEquals(3, details.size());
-        assertTrue(details.get(0).startsWith("+ Расширенная гарантия +1 год"));
-        assertTrue(details.get(1).startsWith("+ Установка и настройка ПО"));
-        assertTrue(details.get(2).startsWith("+ Подарочная упаковка"));
+        assertTrue(details.get(0).startsWith("+ Extended warranty +1 year"));
+        assertTrue(details.get(1).startsWith("+ Software setup"));
+        assertTrue(details.get(2).startsWith("+ Gift wrapping"));
     }
 
     @Test
     void decoratorsWorkOnBundlesToo() {
-        ProductBundle bundle = new ProductBundle("Для учёбы", 10).add(LAPTOP).add(MOUSE);
+        ProductBundle bundle = new ProductBundle("For study", 10).add(LAPTOP).add(MOUSE);
         StoreItem wrapped = new SetupAddOn(bundle);
         assertEquals(bundle.getPrice() + SetupAddOn.PRICE, wrapped.getPrice());
-        assertEquals("Для учёбы", wrapped.getTitle());
+        assertEquals("For study", wrapped.getTitle());
         assertEquals(bundle.getDetails().size() + 1, wrapped.getDetails().size());
     }
 

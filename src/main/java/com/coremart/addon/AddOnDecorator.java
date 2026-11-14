@@ -29,7 +29,7 @@ public abstract class AddOnDecorator implements StoreItem {
         this.inner = inner;
     }
 
-    /** Name of the service, e.g. "Подарочная упаковка". */
+    /** Name of the service, e.g. "Gift wrapping". */
     public abstract String getAddOnName();
 
     /** Price of the service alone, in tenge. */

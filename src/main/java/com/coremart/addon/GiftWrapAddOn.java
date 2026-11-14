@@ -13,7 +13,7 @@ public class GiftWrapAddOn extends AddOnDecorator {
 
     @Override
     public String getAddOnName() {
-        return "Подарочная упаковка";
+        return "Gift wrapping";
     }
 
     @Override

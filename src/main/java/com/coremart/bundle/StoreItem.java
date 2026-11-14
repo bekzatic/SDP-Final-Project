@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface StoreItem {
 
-    /** Name shown in the cart, e.g. "Lenovo IdeaPad Slim 5" or "Игровой сетап". */
+    /** Name shown in the cart, e.g. "Lenovo IdeaPad Slim 5" or "Gaming setup". */
     String getTitle();
 
     /** Price of one item in tenge, including discounts and services. */

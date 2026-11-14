@@ -1,80 +1,80 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Корзина')}"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Cart')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 
 <main class="container">
     <section class="hero">
-        <h1>Корзина</h1>
-        <p class="muted" th:text="${cart.empty} ? 'Пока пусто.' : 'Товаров: ' + ${cart.itemCount}">Товаров: 0</p>
+        <h1>Cart</h1>
+        <p class="muted" th:text="${cart.empty} ? 'Nothing here yet.' : 'Items: ' + ${cart.itemCount}">Items: 0</p>
     </section>
 
     <th:block th:replace="~{fragments/layout :: flash}"></th:block>
 
     <div class="empty-cart" th:if="${cart.empty}">
-        <p class="muted">Добавьте товары из каталога или выберите готовый комплект.</p>
-        <a class="button" th:href="@{/catalog}">Перейти в каталог</a>
+        <p class="muted">Add products from the catalog or pick a ready-made bundle.</p>
+        <a class="button" th:href="@{/catalog}">Go to catalog</a>
     </div>
 
     <div class="cart-layout" th:unless="${cart.empty}">
         <section class="cart-lines">
             <article class="cart-line" th:each="line : ${cart.lines}">
                 <div class="cart-line-info">
-                    <h2 class="cart-line-title" th:text="${line.item.title}">Товар</h2>
+                    <h2 class="cart-line-title" th:text="${line.item.title}">Product</h2>
                     <ul class="cart-line-details" th:if="${!#lists.isEmpty(line.item.details)}">
-                        <li th:each="d : ${line.item.details}" th:text="${d}">Деталь</li>
+                        <li th:each="d : ${line.item.details}" th:text="${d}">Detail</li>
                     </ul>
-                    <span class="muted" th:text="${line.item.formattedPrice} + ' за шт.'">0 ₸ за шт.</span>
+                    <span class="muted" th:text="${line.item.formattedPrice} + ' each'">0 ₸ each</span>
                 </div>
                 <div class="cart-line-actions">
                     <form th:action="@{/cart/update}" method="post" class="qty-form">
                         <input type="hidden" name="lineId" th:value="${line.id}">
                         <input class="qty-input" type="number" name="quantity" min="1" max="10"
-                               th:value="${line.quantity}" aria-label="Количество">
-                        <button type="submit" class="link-button">Обновить</button>
+                               th:value="${line.quantity}" aria-label="Quantity">
+                        <button type="submit" class="link-button">Update</button>
                     </form>
                     <span class="price" th:text="${line.formattedTotal}">0 ₸</span>
                     <form th:action="@{/cart/remove}" method="post">
                         <input type="hidden" name="lineId" th:value="${line.id}">
-                        <button type="submit" class="link-button danger">Удалить</button>
+                        <button type="submit" class="link-button danger">Remove</button>
                     </form>
                 </div>
             </article>
 
             <form th:action="@{/cart/clear}" method="post">
-                <button type="submit" class="link-button danger">Очистить корзину</button>
+                <button type="submit" class="link-button danger">Clear cart</button>
             </form>
         </section>
 
         <aside class="cart-summary">
-            <h2>Итого</h2>
+            <h2>Total</h2>
             <div class="summary-row">
-                <span class="muted">Товары</span>
+                <span class="muted">Items</span>
                 <span th:text="${cart.formattedSubtotal}">0 ₸</span>
             </div>
 
             <div th:if="${cart.promoCode != null}" class="promo-applied">
                 <div class="summary-row">
-                    <span class="muted" th:text="'Промокод ' + ${cart.promoCode}">Промокод</span>
+                    <span class="muted" th:text="'Promo code ' + ${cart.promoCode}">Promo code</span>
                     <span class="discount" th:text="'− ' + ${cart.formattedDiscount}">− 0 ₸</span>
                 </div>
-                <p class="muted small" th:text="${cart.discountStrategy.description}">Скидка</p>
+                <p class="muted small" th:text="${cart.discountStrategy.description}">Discount</p>
                 <form th:action="@{/cart/promo/remove}" method="post">
-                    <button type="submit" class="link-button">Убрать промокод</button>
+                    <button type="submit" class="link-button">Remove promo code</button>
                 </form>
             </div>
 
             <form th:if="${cart.promoCode == null}" th:action="@{/cart/promo}" method="post" class="promo-form">
-                <input type="text" name="code" placeholder="Промокод" aria-label="Промокод">
-                <button type="submit" class="button button-secondary">Применить</button>
+                <input type="text" name="code" placeholder="Promo code" aria-label="Promo code">
+                <button type="submit" class="button button-secondary">Apply</button>
             </form>
 
             <div class="summary-row summary-total">
-                <span>К оплате</span>
+                <span>To pay</span>
                 <span th:text="${cart.formattedTotal}">0 ₸</span>
             </div>
-            <a class="button button-wide" th:href="@{/checkout}">Оформить заказ</a>
+            <a class="button button-wide" th:href="@{/checkout}">Checkout</a>
         </aside>
     </div>
 </main>

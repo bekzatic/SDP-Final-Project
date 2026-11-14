@@ -1,43 +1,43 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Для сотрудников')}"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Staff area')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 
 <main class="container">
     <section class="hero">
-        <h1>Для сотрудников</h1>
-        <p class="muted">Заказы, склад и уведомления склада. Учебный проект: вход без пароля.</p>
+        <h1>Staff area</h1>
+        <p class="muted">Orders, stock and warehouse alerts. Student project: no password required.</p>
     </section>
 
     <th:block th:replace="~{fragments/layout :: flash}"></th:block>
 
     <div class="stats">
         <div class="stat"><span class="stat-value" th:text="${#lists.size(orders)}">0</span>
-            <span class="muted">заказов всего</span></div>
+            <span class="muted">orders in total</span></div>
         <div class="stat"><span class="stat-value" th:text="${waiting}">0</span>
-            <span class="muted">ждут оплаты</span></div>
+            <span class="muted">awaiting payment</span></div>
         <div class="stat"><span class="stat-value" th:text="${inWork}">0</span>
-            <span class="muted">в работе</span></div>
+            <span class="muted">in progress</span></div>
         <div class="stat"><span class="stat-value" th:text="${revenue}">0 ₸</span>
-            <span class="muted">оплачено</span></div>
+            <span class="muted">paid</span></div>
     </div>
 
     <section class="admin-section" id="orders">
-        <h2>Заказы</h2>
-        <p class="muted" th:if="${#lists.isEmpty(orders)}">Заказов пока нет.</p>
+        <h2>Orders</h2>
+        <p class="muted" th:if="${#lists.isEmpty(orders)}">No orders yet.</p>
         <div class="table-wrap" th:unless="${#lists.isEmpty(orders)}">
             <table class="admin-table">
                 <thead>
-                <tr><th>Номер</th><th>Дата</th><th>Покупатель</th><th>Получение</th><th>Сумма</th><th>Статус</th><th>Действия</th></tr>
+                <tr><th>Number</th><th>Date</th><th>Customer</th><th>Delivery</th><th>Total</th><th>Status</th><th>Actions</th></tr>
                 </thead>
                 <tbody>
                 <tr th:each="o : ${orders}">
                     <td class="nowrap" th:text="${o.number}">CM-1001</td>
-                    <td class="nowrap" th:text="${o.createdAtText}">дата</td>
-                    <td><span th:text="${o.customer.name}">Имя</span><br>
-                        <span class="muted small" th:text="${o.customer.phone}">телефон</span></td>
-                    <td th:text="${o.delivery.label}">Самовывоз</td>
+                    <td class="nowrap" th:text="${o.createdAtText}">date</td>
+                    <td><span th:text="${o.customer.name}">Name</span><br>
+                        <span class="muted small" th:text="${o.customer.phone}">phone</span></td>
+                    <td th:text="${o.delivery.label}">Pickup</td>
                     <td class="nowrap" th:text="${o.formattedTotal}">0 ₸</td>
                     <td><span th:replace="~{fragments/layout :: status(${o})}"></span></td>
                     <td>
@@ -45,7 +45,7 @@
                             <form th:each="a : ${o.staffActions}" method="post"
                                   th:action="@{/admin/orders/{n}/{act}(n=${o.number}, act=${#strings.toLowerCase(a.name())})}">
                                 <button type="submit" th:text="${a.label}"
-                                        th:class="${a.name() == 'CANCEL'} ? 'link-button danger' : 'button button-small'">Действие</button>
+                                        th:class="${a.name() == 'CANCEL'} ? 'link-button danger' : 'button button-small'">Action</button>
                             </form>
                             <span class="muted small" th:if="${#lists.isEmpty(o.staffActions)}">—</span>
                         </div>
@@ -58,24 +58,24 @@
 
     <div class="admin-columns">
         <section class="admin-section" id="stock">
-            <h2>Склад</h2>
+            <h2>Warehouse</h2>
             <div class="table-wrap">
                 <table class="admin-table">
-                    <thead><tr><th>Товар</th><th>Остаток</th><th>Пополнить</th></tr></thead>
+                    <thead><tr><th>Product</th><th>Stock</th><th>Restock</th></tr></thead>
                     <tbody>
                     <tr th:each="p : ${products}" th:classappend="${p.stock <= threshold} ? 'row-low'">
-                        <td><a th:href="@{/product/{id}(id=${p.id})}" th:text="${p.fullName}">Товар</a></td>
+                        <td><a th:href="@{/product/{id}(id=${p.id})}" th:text="${p.fullName}">Product</a></td>
                         <td class="nowrap">
-                            <span th:text="${p.stock} + ' шт.'">0 шт.</span>
-                            <span class="badge badge-out" th:if="${p.stock == 0}">нет</span>
-                            <span class="badge badge-low" th:if="${p.stock > 0 and p.stock <= threshold}">мало</span>
+                            <span th:text="${p.stock} + ' pcs.'">0 pcs.</span>
+                            <span class="badge badge-out" th:if="${p.stock == 0}">none</span>
+                            <span class="badge badge-low" th:if="${p.stock > 0 and p.stock <= threshold}">low</span>
                         </td>
                         <td>
                             <form th:action="@{/admin/stock}" method="post" class="qty-form">
                                 <input type="hidden" name="productId" th:value="${p.id}">
                                 <input class="qty-input" type="number" name="quantity" value="5" min="1"
-                                       th:max="${maxRestock}" aria-label="Сколько добавить">
-                                <button type="submit" class="link-button">Добавить</button>
+                                       th:max="${maxRestock}" aria-label="How many to add">
+                                <button type="submit" class="link-button">Add</button>
                             </form>
                         </td>
                     </tr>
@@ -85,12 +85,12 @@
         </section>
 
         <section class="admin-section" id="alerts">
-            <h2>Уведомления склада</h2>
-            <p class="muted" th:if="${#lists.isEmpty(alerts)}">Пока тихо.</p>
+            <h2>Warehouse alerts</h2>
+            <p class="muted" th:if="${#lists.isEmpty(alerts)}">All quiet so far.</p>
             <ul class="mail-list info-card" th:unless="${#lists.isEmpty(alerts)}">
                 <li th:each="n : ${alerts}">
-                    <span class="muted" th:text="${n.timeText} + ' · ' + ${n.orderNumber}">время</span>
-                    <span th:text="${n.text}">Текст</span>
+                    <span class="muted" th:text="${n.timeText} + ' · ' + ${n.orderNumber}">time</span>
+                    <span th:text="${n.text}">Text</span>
                 </li>
             </ul>
         </section>

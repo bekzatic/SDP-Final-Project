@@ -40,7 +40,7 @@ class CatalogPageTest {
         for (String url : List.of("/", "/catalog")) {
             ResultActions result = page(url)
                     .andExpect(model().attribute("products", catalog.findAll()))
-                    .andExpect(content().string(containsString("Найдено товаров: " + catalog.size())));
+                    .andExpect(content().string(containsString("Products found: " + catalog.size())));
             for (Product p : catalog.findAll()) {
                 result.andExpect(content().string(containsString(p.getName())));
             }
@@ -53,7 +53,7 @@ class CatalogPageTest {
         ResultActions result = page("/catalog?category=MONITOR")
                 .andExpect(model().attribute("selected", Category.MONITOR))
                 .andExpect(model().attribute("products", monitors))
-                .andExpect(content().string(containsString("<h1>Мониторы</h1>")));
+                .andExpect(content().string(containsString("<h1>Monitors</h1>")));
         for (Product p : monitors) {
             result.andExpect(content().string(containsString(p.getName())));
         }
@@ -84,7 +84,7 @@ class CatalogPageTest {
                 .findFirst().orElseThrow();
         page("/catalog")
                 .andExpect(content().string(containsString(lowStock.getFormattedPrice())))
-                .andExpect(content().string(containsString("Мало: " + lowStock.getStock() + " шт.")))
+                .andExpect(content().string(containsString("Low stock: " + lowStock.getStock() + " pcs.")))
                 .andExpect(content().string(containsString("href=\"/product/" + lowStock.getId() + "\"")))
                 .andExpect(content().string(containsString("/css/style.css")));
     }

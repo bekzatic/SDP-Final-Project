@@ -22,8 +22,8 @@ public class PercentageDiscount implements DiscountStrategy {
 
     @Override
     public String getDescription() {
-        return "Скидка " + percent + "%"
-                + (maxAmount > 0 ? ", не больше " + Product.formatTenge(maxAmount) : "");
+        return "Discount " + percent + "%"
+                + (maxAmount > 0 ? ", up to " + Product.formatTenge(maxAmount) : "");
     }
 
     @Override

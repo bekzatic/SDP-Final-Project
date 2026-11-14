@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductModelTest {
 
-    private final Laptop laptop = new Laptop(1, "IdeaPad Slim 5", "Lenovo", 389_000, 8, "Тонкий ноутбук",
+    private final Laptop laptop = new Laptop(1, "IdeaPad Slim 5", "Lenovo", 389_000, 8, "Thin laptop",
             "AMD Ryzen 5 7530U", 16, 512, "AMD Radeon Graphics", 15.6, 1.7);
 
     @Test
@@ -22,37 +22,37 @@ class ProductModelTest {
         assertEquals(Category.MONITOR, new Monitor(3, "U2723QE", "Dell", 249_000, 5, "",
                 27, "3840 × 2160", 60, "IPS").getCategory());
         assertEquals(Category.ACCESSORY, new Accessory(4, "MX Master 3S", "Logitech", 49_000, 20, "",
-                "Мышь", "Bluetooth, USB-приёмник").getCategory());
+                "Mouse", "Bluetooth, USB receiver").getCategory());
     }
 
     @Test
     void specsKeepTheirDisplayOrder() {
-        assertEquals(List.of("Процессор", "Оперативная память", "Накопитель", "Видеокарта", "Экран", "Вес"),
+        assertEquals(List.of("Processor", "RAM", "Storage", "Graphics", "Display", "Weight"),
                 List.copyOf(laptop.getSpecs().keySet()));
-        assertEquals("512 ГБ SSD", laptop.getSpecs().get("Накопитель"));
-        assertEquals("15,6″", laptop.getSpecs().get("Экран"));
-        assertEquals("1,7 кг", laptop.getSpecs().get("Вес"));
+        assertEquals("512 GB SSD", laptop.getSpecs().get("Storage"));
+        assertEquals("15.6″", laptop.getSpecs().get("Display"));
+        assertEquals("1.7 kg", laptop.getSpecs().get("Weight"));
     }
 
     @Test
     void terabyteStorageIsShownInTerabytes() {
         DesktopPC pc = new DesktopPC(5, "Legion Tower 5", "Lenovo", 899_000, 2, "",
                 "AMD Ryzen 7 7700", 32, 1000, "NVIDIA GeForce RTX 4070", "Tower");
-        assertEquals("1 ТБ SSD", pc.getSpecs().get("Накопитель"));
+        assertEquals("1 TB SSD", pc.getSpecs().get("Storage"));
     }
 
     @Test
     void priceIsFormattedInTenge() {
-        assertEquals("389 000 ₸", laptop.getFormattedPrice());
-        assertEquals("1 249 990 ₸", Product.formatTenge(1_249_990));
+        assertEquals("389,000 ₸", laptop.getFormattedPrice());
+        assertEquals("1,249,990 ₸", Product.formatTenge(1_249_990));
         assertEquals("Lenovo IdeaPad Slim 5", laptop.getFullName());
     }
 
     @Test
     void invalidValuesAreRejected() {
-        assertThrows(IllegalArgumentException.class, () -> new Accessory(6, " ", "Razer", 10_000, 1, "", "Мышь", "USB"));
-        assertThrows(IllegalArgumentException.class, () -> new Accessory(6, "Viper", "Razer", 0, 1, "", "Мышь", "USB"));
-        assertThrows(IllegalArgumentException.class, () -> new Accessory(6, "Viper", "Razer", 10_000, -1, "", "Мышь", "USB"));
+        assertThrows(IllegalArgumentException.class, () -> new Accessory(6, " ", "Razer", 10_000, 1, "", "Mouse", "USB"));
+        assertThrows(IllegalArgumentException.class, () -> new Accessory(6, "Viper", "Razer", 0, 1, "", "Mouse", "USB"));
+        assertThrows(IllegalArgumentException.class, () -> new Accessory(6, "Viper", "Razer", 10_000, -1, "", "Mouse", "USB"));
         assertThrows(IllegalArgumentException.class, () -> laptop.setStock(-2));
     }
 

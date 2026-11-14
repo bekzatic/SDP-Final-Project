@@ -19,7 +19,7 @@ public interface OrderState {
     /** Stable code, e.g. "PAID". */
     String getCode();
 
-    /** Status as the customer sees it, e.g. "Оплачен". */
+    /** Status as the customer sees it, e.g. "Paid". */
     String getName();
 
     /** One sentence about what happens now. */
@@ -58,7 +58,7 @@ public interface OrderState {
     }
 
     private IllegalStateException notAllowed(OrderAction action) {
-        return new IllegalStateException("Действие «" + action.getLabel() + "» недоступно: заказ в статусе «"
-                + getName() + "»");
+        return new IllegalStateException("Action “" + action.getLabel() + "” is not available: the order status is “"
+                + getName() + "”");
     }
 }

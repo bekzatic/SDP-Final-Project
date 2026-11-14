@@ -36,11 +36,11 @@ public class DesktopPC extends Product {
     @Override
     public Map<String, String> getSpecs() {
         Map<String, String> specs = new LinkedHashMap<>();
-        specs.put("Процессор", cpu);
-        specs.put("Оперативная память", ramGb + " ГБ");
-        specs.put("Накопитель", Specs.storage(storageGb));
-        specs.put("Видеокарта", gpu);
-        specs.put("Корпус", formFactor);
+        specs.put("Processor", cpu);
+        specs.put("RAM", ramGb + " GB");
+        specs.put("Storage", Specs.storage(storageGb));
+        specs.put("Graphics", gpu);
+        specs.put("Form factor", formFactor);
         return specs;
     }
 }

@@ -45,7 +45,7 @@ public class CartController {
                       RedirectAttributes redirect) {
         Optional<Product> product = catalog.findById(productId);
         if (product.isEmpty()) {
-            redirect.addFlashAttribute("error", "Товар не найден");
+            redirect.addFlashAttribute("error", "Product not found");
             return "redirect:/catalog";
         }
         StoreItem item = AddOnType.applyAll(new ProductItem(product.get()), addOns);
@@ -59,7 +59,7 @@ public class CartController {
                             RedirectAttributes redirect) {
         Optional<ProductBundle> bundle = bundles.findById(bundleId);
         if (bundle.isEmpty()) {
-            redirect.addFlashAttribute("error", "Комплект не найден");
+            redirect.addFlashAttribute("error", "Bundle not found");
             return "redirect:/bundles";
         }
         return addToCart(bundle.get(), quantity, "/bundles", redirect);
@@ -72,7 +72,7 @@ public class CartController {
             redirect.addFlashAttribute("error", e.getMessage());
             return "redirect:" + backUrl;
         }
-        redirect.addFlashAttribute("message", "«" + item.getTitle() + "» добавлен в корзину");
+        redirect.addFlashAttribute("message", "“" + item.getTitle() + "” added to cart");
         return "redirect:/cart";
     }
 
@@ -103,9 +103,9 @@ public class CartController {
     @PostMapping("/cart/promo")
     public String promo(@RequestParam(name = "code", defaultValue = "") String code, RedirectAttributes redirect) {
         if (cart.applyPromoCode(code)) {
-            redirect.addFlashAttribute("message", "Промокод " + cart.getPromoCode() + " применён");
+            redirect.addFlashAttribute("message", "Promo code " + cart.getPromoCode() + " applied");
         } else {
-            redirect.addFlashAttribute("error", "Промокод «" + code.trim() + "» не найден");
+            redirect.addFlashAttribute("error", "Promo code “" + code.trim() + "” not found");
         }
         return "redirect:/cart";
     }

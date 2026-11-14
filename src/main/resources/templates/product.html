@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/layout :: head(${product.fullName})}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
@@ -8,9 +8,9 @@
     <th:block th:replace="~{fragments/layout :: flash}"></th:block>
 
     <nav class="breadcrumbs">
-        <a th:href="@{/catalog}">← Назад в каталог</a>
+        <a th:href="@{/catalog}">← Back to catalog</a>
         <span class="muted">/</span>
-        <a th:href="@{/catalog(category=${product.category.name()})}" th:text="${product.category.displayName}">Категория</a>
+        <a th:href="@{/catalog(category=${product.category.name()})}" th:text="${product.category.displayName}">Category</a>
     </nav>
 
     <article class="product">
@@ -19,64 +19,64 @@
         </div>
 
         <div class="product-info">
-            <span class="card-category" th:text="${product.category.displayName}">Ноутбуки</span>
+            <span class="card-category" th:text="${product.category.displayName}">Laptops</span>
             <h1 class="product-title">
                 <span class="card-brand" th:text="${product.brand}">Brand</span>
                 <span th:text="${product.name}">Model</span>
             </h1>
             <p class="product-description muted" th:if="${!#strings.isEmpty(product.description)}"
-               th:text="${product.description}">Описание</p>
+               th:text="${product.description}">Description</p>
 
             <div class="buy-box">
                 <span class="price price-large" th:text="${product.formattedPrice}">0 ₸</span>
-                <span th:if="${product.stock == 0}" class="badge badge-out">Нет в наличии</span>
+                <span th:if="${product.stock == 0}" class="badge badge-out">Out of stock</span>
                 <span th:if="${product.stock > 0 and product.stock <= lowStock}" class="badge badge-low"
-                      th:text="'Мало: осталось ' + ${product.stock} + ' шт.'">Мало</span>
+                      th:text="'Low stock: only ' + ${product.stock} + ' left'">Low stock</span>
                 <span th:if="${product.stock > lowStock}" class="badge badge-in"
-                      th:text="'В наличии: ' + ${product.stock} + ' шт.'">В наличии</span>
+                      th:text="'In stock: ' + ${product.stock} + ' pcs.'">In stock</span>
             </div>
 
             <form class="add-form" th:action="@{/cart/add}" method="post" th:if="${product.inStock}">
                 <input type="hidden" name="productId" th:value="${product.id}">
 
                 <fieldset class="services">
-                    <legend>Гарантия</legend>
+                    <legend>Warranty</legend>
                     <label class="service">
                         <input type="radio" name="addOns" value="" checked>
-                        <span>Стандартная гарантия производителя</span>
-                        <span class="muted">бесплатно</span>
+                        <span>Standard manufacturer warranty</span>
+                        <span class="muted">free</span>
                     </label>
                     <label class="service" th:each="t : ${warranties}">
                         <input type="radio" name="addOns" th:value="${t.name()}">
-                        <span th:text="${t.label}">Гарантия +1 год</span>
+                        <span th:text="${t.label}">Warranty +1 year</span>
                         <span class="muted" th:text="'+ ' + ${addOnPrices.get(t)}">+ 0 ₸</span>
                     </label>
                 </fieldset>
 
                 <fieldset class="services" th:if="${!#lists.isEmpty(extras)}">
-                    <legend>Услуги</legend>
+                    <legend>Services</legend>
                     <label class="service" th:each="t : ${extras}">
                         <input type="checkbox" name="addOns" th:value="${t.name()}">
-                        <span th:text="${t.label}">Услуга</span>
+                        <span th:text="${t.label}">Service</span>
                         <span class="muted" th:text="'+ ' + ${addOnPrices.get(t)}">+ 0 ₸</span>
                     </label>
                 </fieldset>
 
                 <div class="add-row">
-                    <label for="quantity" class="muted">Количество</label>
+                    <label for="quantity" class="muted">Quantity</label>
                     <input id="quantity" class="qty-input" type="number" name="quantity" value="1" min="1"
                            th:max="${maxQuantity}">
-                    <button class="button" type="submit">В корзину</button>
+                    <button class="button" type="submit">Add to cart</button>
                 </div>
             </form>
 
-            <h2 class="specs-title">Характеристики</h2>
+            <h2 class="specs-title">Specifications</h2>
             <table class="specs-table">
-                <tr><th>Бренд</th><td th:text="${product.brand}">Brand</td></tr>
-                <tr><th>Модель</th><td th:text="${product.name}">Model</td></tr>
+                <tr><th>Brand</th><td th:text="${product.brand}">Brand</td></tr>
+                <tr><th>Model</th><td th:text="${product.name}">Model</td></tr>
                 <tr th:each="s : ${product.specs}">
-                    <th th:text="${s.key}">Характеристика</th>
-                    <td th:text="${s.value}">Значение</td>
+                    <th th:text="${s.key}">Spec</th>
+                    <td th:text="${s.value}">Value</td>
                 </tr>
             </table>
         </div>

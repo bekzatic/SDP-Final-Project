@@ -14,7 +14,7 @@ public class NameSort extends ComparatorSort {
 
     @Override
     public String getLabel() {
-        return "По названию";
+        return "Name";
     }
 
     @Override

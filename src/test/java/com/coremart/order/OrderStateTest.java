@@ -28,11 +28,11 @@ class OrderStateTest {
         laptop = ProductBuilder.of(Category.LAPTOP).brand("Lenovo").name("IdeaPad Slim 5").price(389_000).stock(5)
                 .cpu("AMD Ryzen 5 7530U").ramGb(16).storageGb(512).screenInches(15.6).weightKg(1.7).build();
         mouse = ProductBuilder.of(Category.ACCESSORY).brand("Logitech").name("M185").price(9_000).stock(25)
-                .type("Мышь").build();
+                .type("Mouse").build();
     }
 
     private Order order(DeliveryMethod delivery) {
-        return new Order(1, new CustomerInfo("Айгерим", "+7 701 000 00 00", "a@example.com", "Абая 10"),
+        return new Order(1, new CustomerInfo("Aigerim", "+7 701 000 00 00", "a@example.com", "10 Abai St."),
                 delivery, PaymentMethod.LATER, List.of(OrderLine.of(new ProductItem(mouse), 2)), 0, null);
     }
 
@@ -41,7 +41,7 @@ class OrderStateTest {
         Order order = order(DeliveryMethod.PICKUP);
         assertInstanceOf(NewState.class, order.getState());
         assertEquals("CM-1001", order.getNumber());
-        assertEquals("Ожидает оплаты", order.getStatusName());
+        assertEquals("Awaiting payment", order.getStatusName());
         assertEquals(List.of(OrderAction.PAY, OrderAction.CANCEL), order.getCustomerActions());
         assertEquals(List.of(OrderAction.CANCEL), order.getStaffActions());
         assertEquals(1, order.getHistory().size());
@@ -56,11 +56,11 @@ class OrderStateTest {
         assertInstanceOf(AssemblingState.class, order.getState());
         order.ship();
         assertInstanceOf(ShippedState.class, order.getState());
-        assertEquals("Передан курьеру", order.getStatusName());
+        assertEquals("With courier", order.getStatusName());
         order.deliver();
         assertInstanceOf(DeliveredState.class, order.getState());
         assertTrue(order.getState().isFinal());
-        assertEquals(List.of("Ожидает оплаты", "Оплачен", "Собирается", "Передан курьеру", "Получен"),
+        assertEquals(List.of("Awaiting payment", "Paid", "Assembling", "With courier", "Delivered"),
                 order.getHistory().stream().map(StatusChange::status).toList());
     }
 
@@ -70,14 +70,14 @@ class OrderStateTest {
         order.pay();
         order.startAssembly();
         order.ship();
-        assertEquals("Готов к выдаче", order.getStatusName());
+        assertEquals("Ready for pickup", order.getStatusName());
     }
 
     @Test
     void eachStateAllowsOnlyItsOwnActions() {
         Order order = order(DeliveryMethod.PICKUP);
         IllegalStateException e = assertThrows(IllegalStateException.class, order::ship);
-        assertEquals("Действие «Передать в доставку» недоступно: заказ в статусе «Ожидает оплаты»", e.getMessage());
+        assertEquals("Action “Ship” is not available: the order status is “Awaiting payment”", e.getMessage());
         assertThrows(IllegalStateException.class, order::deliver);
         assertThrows(IllegalStateException.class, order::startAssembly);
 
@@ -127,19 +127,19 @@ class OrderStateTest {
 
     @Test
     void orderCopiesLinesAndCountsMoney() {
-        ProductBundle bundle = new ProductBundle("Для учёбы", 10).add(laptop).add(mouse);
-        Order order = new Order(2, new CustomerInfo(" Ерлан ", "+7 702 000 00 00", "e@example.com", ""),
+        ProductBundle bundle = new ProductBundle("For study", 10).add(laptop).add(mouse);
+        Order order = new Order(2, new CustomerInfo(" Erlan ", "+7 702 000 00 00", "e@example.com", ""),
                 DeliveryMethod.COURIER, PaymentMethod.CARD_NOW,
                 List.of(OrderLine.of(bundle, 1), OrderLine.of(new GiftWrapAddOn(new ProductItem(mouse)), 2)),
                 5_000, "CORE5000");
 
-        assertEquals("Ерлан", order.getCustomer().name());
+        assertEquals("Erlan", order.getCustomer().name());
         assertEquals(bundle.getPrice() + 2 * 12_000, order.getSubtotal());
         assertEquals(0, order.getDeliveryCost(), "courier is free from 300 000 tenge");
         assertEquals(order.getSubtotal() - 5_000, order.getTotal());
         assertEquals(3, order.getItemCount());
         assertEquals(Map.of(laptop, 1, mouse, 3), order.getRequiredStock());
-        assertEquals("+ Подарочная упаковка (3 000 ₸)", order.getLines().get(1).getDetails().get(0));
+        assertEquals("+ Gift wrapping (3,000 ₸)", order.getLines().get(1).getDetails().get(0));
     }
 
     @Test
@@ -147,7 +147,7 @@ class OrderStateTest {
         Order order = order(DeliveryMethod.COURIER);
         assertEquals(2_000, order.getDeliveryCost());
         assertEquals(18_000 + 2_000, order.getTotal());
-        assertEquals("бесплатно", order(DeliveryMethod.PICKUP).getFormattedDeliveryCost());
+        assertEquals("free", order(DeliveryMethod.PICKUP).getFormattedDeliveryCost());
     }
 
     @Test

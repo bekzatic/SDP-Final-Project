@@ -47,12 +47,12 @@ class BundlePageTest {
     void bundlesPageShowsEveryBundleWithItsContents() throws Exception {
         ResultActions page = mvc.perform(get("/bundles"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Готовые комплекты")))
+                .andExpect(content().string(containsString("Ready-made bundles")))
                 .andExpect(content().string(containsString("— Logitech MX Keys S")));
         for (ProductBundle b : bundles.getAll().values()) {
             page.andExpect(content().string(containsString(b.getTitle())))
                     .andExpect(content().string(containsString(b.getFormattedPrice())))
-                    .andExpect(content().string(containsString("Экономия " + b.getFormattedSavings())));
+                    .andExpect(content().string(containsString("You save " + b.getFormattedSavings())));
         }
         mvc.perform(get("/catalog")).andExpect(content().string(containsString("href=\"/bundles\"")));
     }
@@ -74,6 +74,6 @@ class BundlePageTest {
     void unknownBundle() throws Exception {
         mvc.perform(post("/cart/add-bundle").param("bundleId", "nope"))
                 .andExpect(redirectedUrl("/bundles"))
-                .andExpect(flash().attribute("error", "Комплект не найден"));
+                .andExpect(flash().attribute("error", "Bundle not found"));
     }
 }

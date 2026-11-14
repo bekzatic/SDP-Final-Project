@@ -33,10 +33,10 @@ public class Monitor extends Product {
     @Override
     public Map<String, String> getSpecs() {
         Map<String, String> specs = new LinkedHashMap<>();
-        specs.put("Диагональ", Specs.inches(sizeInches));
-        specs.put("Разрешение", resolution);
-        specs.put("Частота обновления", refreshRateHz + " Гц");
-        specs.put("Матрица", panelType);
+        specs.put("Screen size", Specs.inches(sizeInches));
+        specs.put("Resolution", resolution);
+        specs.put("Refresh rate", refreshRateHz + " Hz");
+        specs.put("Panel", panelType);
         return specs;
     }
 }

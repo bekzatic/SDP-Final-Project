@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Комплекты')}"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bundles')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 
 <main class="container">
     <section class="hero">
-        <h1>Готовые комплекты</h1>
-        <p class="muted">Подобранные наборы техники со скидкой: всё нужное в одной покупке.</p>
+        <h1>Ready-made bundles</h1>
+        <p class="muted">Hand-picked tech sets at a discount: everything you need in one purchase.</p>
     </section>
 
     <th:block th:replace="~{fragments/layout :: flash}"></th:block>
@@ -15,27 +15,27 @@
     <div class="bundle-grid">
         <article class="bundle" th:each="e : ${bundles}" th:with="b=${e.value}">
             <header class="bundle-head">
-                <h2 th:text="${b.title}">Комплект</h2>
+                <h2 th:text="${b.title}">Bundle</h2>
                 <span class="badge badge-in" th:text="'−' + ${b.discountPercent} + '%'">−5%</span>
             </header>
 
             <ul class="bundle-contents">
                 <li th:each="line : ${b.details}"
                     th:classappend="${#strings.startsWith(line, '— ')} ? 'nested'"
-                    th:text="${line}">Товар</li>
+                    th:text="${line}">Product</li>
             </ul>
 
             <div class="bundle-prices">
                 <span class="old-price" th:text="${b.formattedFullPrice}">0 ₸</span>
                 <span class="price" th:text="${b.formattedPrice}">0 ₸</span>
-                <span class="discount" th:text="'Экономия ' + ${b.formattedSavings}">Экономия 0 ₸</span>
+                <span class="discount" th:text="'You save ' + ${b.formattedSavings}">You save 0 ₸</span>
             </div>
 
             <form th:action="@{/cart/add-bundle}" method="post" th:if="${b.available}">
                 <input type="hidden" name="bundleId" th:value="${e.key}">
-                <button class="button" type="submit">В корзину</button>
+                <button class="button" type="submit">Add to cart</button>
             </form>
-            <span class="badge badge-out" th:unless="${b.available}">Временно нет в наличии</span>
+            <span class="badge badge-out" th:unless="${b.available}">Temporarily out of stock</span>
         </article>
     </div>
 </main>

@@ -25,9 +25,9 @@ public class StockAlert implements OrderObserver {
             int left = product.getStock();
             if (left <= THRESHOLD) {
                 String text = left == 0
-                        ? "«" + product.getFullName() + "» закончился после заказа " + order.getNumber() + "."
-                        : "Заканчивается «" + product.getFullName() + "»: осталось " + left + " шт.";
-                log.send(new Notification(order.getNumber(), Notification.WAREHOUSE, "Менеджер склада", text));
+                        ? "“" + product.getFullName() + "” sold out after order " + order.getNumber() + "."
+                        : "Running low on “" + product.getFullName() + "”: " + left + " left";
+                log.send(new Notification(order.getNumber(), Notification.WAREHOUSE, "Warehouse manager", text));
             }
         }
     }

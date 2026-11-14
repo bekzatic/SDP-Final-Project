@@ -21,8 +21,8 @@ public class FixedAmountDiscount implements DiscountStrategy {
 
     @Override
     public String getDescription() {
-        return "Скидка " + Product.formatTenge(amount)
-                + (minSubtotal > 0 ? " на заказ от " + Product.formatTenge(minSubtotal) : "");
+        return "Discount " + Product.formatTenge(amount)
+                + (minSubtotal > 0 ? " on orders from " + Product.formatTenge(minSubtotal) : "");
     }
 
     @Override

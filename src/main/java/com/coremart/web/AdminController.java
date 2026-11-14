@@ -62,7 +62,7 @@ public class AdminController {
         Optional<OrderAction> parsed = OrderAction.parse(action);
         try {
             Order order = checkout.advance(number, parsed.orElse(null));
-            redirect.addFlashAttribute("message", "Заказ " + order.getNumber() + ": «" + order.getStatusName() + "»");
+            redirect.addFlashAttribute("message", "Order " + order.getNumber() + ": “" + order.getStatusName() + "”");
         } catch (IllegalStateException | IllegalArgumentException e) {
             redirect.addFlashAttribute("error", e.getMessage());
         }
@@ -75,13 +75,13 @@ public class AdminController {
                           RedirectAttributes redirect) {
         Optional<Product> product = catalog.findById(productId);
         if (product.isEmpty()) {
-            redirect.addFlashAttribute("error", "Товар не найден");
+            redirect.addFlashAttribute("error", "Product not found");
         } else if (quantity < 1 || quantity > MAX_RESTOCK) {
-            redirect.addFlashAttribute("error", "Количество должно быть от 1 до " + MAX_RESTOCK);
+            redirect.addFlashAttribute("error", "Quantity must be between 1 and " + MAX_RESTOCK);
         } else {
             catalog.increaseStock(productId, quantity);
-            redirect.addFlashAttribute("message", "«" + product.get().getFullName() + "»: на складе "
-                    + product.get().getStock() + " шт.");
+            redirect.addFlashAttribute("message", "“" + product.get().getFullName() + "”: "
+                    + product.get().getStock() + " in stock");
         }
         return "redirect:/admin";
     }

@@ -39,12 +39,12 @@ public class Laptop extends Product {
     @Override
     public Map<String, String> getSpecs() {
         Map<String, String> specs = new LinkedHashMap<>();
-        specs.put("Процессор", cpu);
-        specs.put("Оперативная память", ramGb + " ГБ");
-        specs.put("Накопитель", Specs.storage(storageGb));
-        specs.put("Видеокарта", gpu);
-        specs.put("Экран", Specs.inches(screenInches));
-        specs.put("Вес", Specs.decimal(weightKg) + " кг");
+        specs.put("Processor", cpu);
+        specs.put("RAM", ramGb + " GB");
+        specs.put("Storage", Specs.storage(storageGb));
+        specs.put("Graphics", gpu);
+        specs.put("Display", Specs.inches(screenInches));
+        specs.put("Weight", Specs.decimal(weightKg) + " kg");
         return specs;
     }
 }

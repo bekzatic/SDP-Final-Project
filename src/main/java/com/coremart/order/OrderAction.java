@@ -6,11 +6,11 @@ import java.util.Optional;
 /** What can be done with an order. Which actions are allowed depends on its {@link OrderState}. */
 public enum OrderAction {
 
-    PAY("Оплатить", true, false),
-    START_ASSEMBLY("Начать сборку", false, true),
-    SHIP("Передать в доставку", false, true),
-    DELIVER("Отметить полученным", false, true),
-    CANCEL("Отменить заказ", true, true);
+    PAY("Pay", true, false),
+    START_ASSEMBLY("Start assembly", false, true),
+    SHIP("Ship", false, true),
+    DELIVER("Mark as delivered", false, true),
+    CANCEL("Cancel order", true, true);
 
     private final String label;
     private final boolean forCustomer;

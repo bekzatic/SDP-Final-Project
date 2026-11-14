@@ -45,7 +45,7 @@ public class CheckoutController {
     @GetMapping("/checkout")
     public String checkoutPage(Model model, RedirectAttributes redirect) {
         if (cart.isEmpty()) {
-            redirect.addFlashAttribute("error", "Корзина пуста: сначала добавьте товары");
+            redirect.addFlashAttribute("error", "Your cart is empty: add some products first");
             return "redirect:/cart";
         }
         return showForm(model, new CheckoutForm(), List.of());
@@ -55,13 +55,13 @@ public class CheckoutController {
     public String placeOrder(@ModelAttribute("form") CheckoutForm form, BindingResult binding, Model model,
                              RedirectAttributes redirect) {
         if (cart.isEmpty()) {
-            redirect.addFlashAttribute("error", "Корзина пуста: сначала добавьте товары");
+            redirect.addFlashAttribute("error", "Your cart is empty: add some products first");
             return "redirect:/cart";
         }
         try {
             Order order = checkout.placeOrder(cart, form);
             myOrders.add(order.getNumber());
-            redirect.addFlashAttribute("message", "Заказ " + order.getNumber() + " оформлен. Спасибо!");
+            redirect.addFlashAttribute("message", "Order " + order.getNumber() + " placed. Thank you!");
             return "redirect:/orders/" + order.getNumber();
         } catch (CheckoutException e) {
             return showForm(model, form, e.getErrors());
@@ -102,12 +102,12 @@ public class CheckoutController {
 
     @PostMapping("/orders/{number}/pay")
     public String pay(@PathVariable("number") String number, RedirectAttributes redirect) {
-        return act(number, redirect, () -> checkout.pay(number), "Оплата прошла успешно");
+        return act(number, redirect, () -> checkout.pay(number), "Payment successful");
     }
 
     @PostMapping("/orders/{number}/cancel")
     public String cancel(@PathVariable("number") String number, RedirectAttributes redirect) {
-        return act(number, redirect, () -> checkout.cancel(number), "Заказ отменён");
+        return act(number, redirect, () -> checkout.cancel(number), "Order cancelled");
     }
 
     private String act(String number, RedirectAttributes redirect, Runnable action, String done) {

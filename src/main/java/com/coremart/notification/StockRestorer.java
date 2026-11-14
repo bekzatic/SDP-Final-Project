@@ -29,7 +29,7 @@ public class StockRestorer implements OrderObserver {
         for (Map.Entry<Product, Integer> e : order.getRequiredStock().entrySet()) {
             catalog.increaseStock(e.getKey().getId(), e.getValue());
         }
-        log.send(new Notification(order.getNumber(), Notification.WAREHOUSE, "Менеджер склада",
-                "Заказ " + order.getNumber() + " отменён, товары возвращены на склад."));
+        log.send(new Notification(order.getNumber(), Notification.WAREHOUSE, "Warehouse manager",
+                "Order " + order.getNumber() + " cancelled, items returned to stock."));
     }
 }

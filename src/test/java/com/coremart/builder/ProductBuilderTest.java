@@ -23,19 +23,19 @@ class ProductBuilderTest {
 
     @Test
     void buildsAProductStepByStep() {
-        Product p = laptop().gpu("AMD Radeon Graphics").description("Лёгкий ноутбук для учёбы").build();
+        Product p = laptop().gpu("AMD Radeon Graphics").description("Light laptop for study").build();
         Laptop l = assertInstanceOf(Laptop.class, p);
         assertEquals("Lenovo IdeaPad Slim 5", l.getFullName());
         assertEquals(389_000, l.getPrice());
         assertEquals(8, l.getStock());
         assertEquals(16, l.getRamGb());
         assertEquals("AMD Radeon Graphics", l.getGpu());
-        assertEquals("Лёгкий ноутбук для учёбы", l.getDescription());
+        assertEquals("Light laptop for study", l.getDescription());
     }
 
     @Test
     void optionalCharacteristicsGetDefaults() {
-        assertEquals("Встроенная графика", ((Laptop) laptop().build()).getGpu());
+        assertEquals("Integrated graphics", ((Laptop) laptop().build()).getGpu());
 
         DesktopPC pc = (DesktopPC) ProductBuilder.of(Category.DESKTOP_PC)
                 .brand("HP").name("Pavilion TP01").price(299_000)
@@ -52,9 +52,9 @@ class ProductBuilderTest {
     @Test
     void accessoryNeedsOnlyItsType() {
         Product mouse = ProductBuilder.of(Category.ACCESSORY)
-                .brand("Logitech").name("M185").price(9_000).stock(25).type("Мышь").build();
+                .brand("Logitech").name("M185").price(9_000).stock(25).type("Mouse").build();
         assertInstanceOf(Accessory.class, mouse);
-        assertEquals("USB", mouse.getSpecs().get("Подключение"));
+        assertEquals("USB", mouse.getSpecs().get("Connection"));
     }
 
     @Test

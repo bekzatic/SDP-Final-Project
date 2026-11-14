@@ -27,7 +27,7 @@ class CoreMartApplicationTests {
         mvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("CoreMart")))
-                .andExpect(content().string(containsString("Каталог техники")))
+                .andExpect(content().string(containsString("Tech catalog")))
                 .andExpect(content().string(containsString("IdeaPad Slim 5")));
     }
 }

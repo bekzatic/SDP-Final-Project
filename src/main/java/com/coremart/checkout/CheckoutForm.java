@@ -37,17 +37,17 @@ public class CheckoutForm {
     public List<String> validate() {
         List<String> errors = new ArrayList<>();
         if (name.length() < 2) {
-            errors.add("Укажите имя");
+            errors.add("Enter your name");
         }
         long digits = phone.chars().filter(Character::isDigit).count();
         if (digits < 10 || digits > 12 || !phone.matches("[0-9+()\\-\\s]+")) {
-            errors.add("Укажите телефон, например +7 701 123 45 67");
+            errors.add("Enter a phone number, e.g. +7 701 123 45 67");
         }
         if (!EMAIL.matcher(email).matches()) {
-            errors.add("Укажите email, на него придут уведомления о заказе");
+            errors.add("Enter an email for order notifications");
         }
         if (delivery.needsAddress() && address.length() < 5) {
-            errors.add("Укажите адрес доставки");
+            errors.add("Enter a delivery address");
         }
         return errors;
     }

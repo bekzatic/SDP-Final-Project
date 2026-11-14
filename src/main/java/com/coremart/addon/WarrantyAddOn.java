@@ -28,7 +28,7 @@ public class WarrantyAddOn extends AddOnDecorator {
 
     @Override
     public String getAddOnName() {
-        return "Расширенная гарантия +" + years + (years == 1 ? " год" : " года");
+        return "Extended warranty +" + years + (years == 1 ? " year" : " years");
     }
 
     @Override

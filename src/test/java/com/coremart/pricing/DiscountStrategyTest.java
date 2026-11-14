@@ -21,7 +21,7 @@ class DiscountStrategyTest {
         assertEquals(50_000, student.discountFor(899_000));
         assertEquals(0, student.discountFor(0));
         assertEquals(15_000, new PercentageDiscount(15, 0).discountFor(100_000));
-        assertTrue(student.getDescription().startsWith("Скидка 10%, не больше"));
+        assertTrue(student.getDescription().startsWith("Discount 10%, up to"));
     }
 
     @Test

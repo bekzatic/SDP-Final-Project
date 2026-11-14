@@ -37,11 +37,11 @@ class OrderObserverTest {
 
     private static Product accessory(int stock) {
         return ProductBuilder.of(Category.ACCESSORY).brand("Logitech").name("M185").price(9_000).stock(stock)
-                .type("Мышь").build();
+                .type("Mouse").build();
     }
 
     private static Order order(Product product, int quantity) {
-        return new Order(7, new CustomerInfo("Айгерим", "+7 701 000 00 00", "a@example.com", ""),
+        return new Order(7, new CustomerInfo("Aigerim", "+7 701 000 00 00", "a@example.com", ""),
                 DeliveryMethod.PICKUP, PaymentMethod.LATER,
                 List.of(OrderLine.of(new ProductItem(product), quantity)), 0, null);
     }
@@ -110,10 +110,10 @@ class OrderObserverTest {
         assertEquals(3, mails.size());
         assertTrue(mails.stream().allMatch(n -> n.channel().equals(Notification.EMAIL)
                 && n.recipient().equals("a@example.com")));
-        assertEquals("Заказ CM-1007 оформлен. Сумма: 18 000 ₸. Оплатить его можно в разделе «Мои заказы».",
+        assertEquals("Order CM-1007 placed. Total: 18,000 ₸. You can pay for it in “My orders”.",
                 mails.get(0).text());
-        assertTrue(mails.get(1).text().startsWith("Заказ CM-1007: «Оплачен»."));
-        assertTrue(mails.get(2).text().contains("Деньги вернутся на карту"));
+        assertTrue(mails.get(1).text().startsWith("Order CM-1007: “Paid”."));
+        assertTrue(mails.get(2).text().contains("The money will be returned to your card"));
     }
 
     @Test
@@ -131,8 +131,8 @@ class OrderObserverTest {
 
         List<Notification> warehouse = log.latest(Notification.WAREHOUSE, 10);
         assertEquals(2, warehouse.size());
-        assertEquals("«Logitech M185» закончился после заказа CM-1007.", warehouse.get(0).text());
-        assertEquals("Заканчивается «Logitech M185»: осталось 2 шт.", warehouse.get(1).text());
+        assertEquals("“Logitech M185” sold out after order CM-1007.", warehouse.get(0).text());
+        assertEquals("Running low on “Logitech M185”: 2 left", warehouse.get(1).text());
     }
 
     @Test
@@ -152,7 +152,7 @@ class OrderObserverTest {
 
         assertInstanceOf(CancelledState.class, order.getState());
         assertEquals(before, mouse.getStock());
-        assertEquals("Заказ CM-1007 отменён, товары возвращены на склад.",
+        assertEquals("Order CM-1007 cancelled, items returned to stock.",
                 log.latest(Notification.WAREHOUSE, 1).get(0).text());
     }
 

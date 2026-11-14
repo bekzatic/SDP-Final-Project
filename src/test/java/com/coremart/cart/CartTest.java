@@ -30,14 +30,14 @@ class CartTest {
         laptop = ProductBuilder.of(Category.LAPTOP).brand("Lenovo").name("IdeaPad Slim 5").price(389_000).stock(2)
                 .cpu("AMD Ryzen 5 7530U").ramGb(16).storageGb(512).screenInches(15.6).weightKg(1.7).build();
         mouse = ProductBuilder.of(Category.ACCESSORY).brand("Logitech").name("M185").price(9_000).stock(25)
-                .type("Мышь").build();
+                .type("Mouse").build();
     }
 
     @Test
     void cartHoldsProductsBundlesAndDecoratedItemsAlike() {
         cart.add(new ProductItem(mouse), 2);
         cart.add(new GiftWrapAddOn(new ProductItem(mouse)), 1);
-        cart.add(new ProductBundle("Для учёбы", 10).add(laptop).add(mouse), 1);
+        cart.add(new ProductBundle("For study", 10).add(laptop).add(mouse), 1);
 
         assertEquals(3, cart.getLines().size());
         assertEquals(4, cart.getItemCount());
@@ -63,7 +63,7 @@ class CartTest {
         cart.add(new ProductItem(laptop), 2);
         assertThrows(IllegalStateException.class, () -> cart.add(new ProductItem(laptop), 1));
         assertThrows(IllegalStateException.class,
-                () -> cart.add(new ProductBundle("Комплект", 5).add(laptop).add(mouse), 1));
+                () -> cart.add(new ProductBundle("Bundle", 5).add(laptop).add(mouse), 1));
         CartLine line = cart.getLines().get(0);
         assertThrows(IllegalStateException.class, () -> cart.changeQuantity(line.getId(), 3));
         assertEquals(2, line.getQuantity());

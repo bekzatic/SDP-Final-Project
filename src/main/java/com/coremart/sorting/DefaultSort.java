@@ -14,7 +14,7 @@ public class DefaultSort implements SortStrategy {
 
     @Override
     public String getLabel() {
-        return "По умолчанию";
+        return "Default";
     }
 
     @Override

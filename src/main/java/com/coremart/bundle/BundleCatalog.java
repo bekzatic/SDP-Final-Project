@@ -24,26 +24,26 @@ public class BundleCatalog {
     }
 
     BundleCatalog(ProductCatalog catalog) {
-        ProductBundle keyboardAndMouse = new ProductBundle("Клавиатура и мышь", 5)
+        ProductBundle keyboardAndMouse = new ProductBundle("Keyboard and mouse", 5)
                 .add(product(catalog, "Logitech MX Keys S"))
                 .add(product(catalog, "Logitech M185"));
 
-        bundles.put("study", new ProductBundle("Рабочее место для учёбы", 8)
+        bundles.put("study", new ProductBundle("Study desk setup", 8)
                 .add(product(catalog, "Lenovo IdeaPad Slim 5"))
                 .add(product(catalog, "Dell P2423"))
                 .add(product(catalog, "Logitech M185")));
 
-        bundles.put("gaming", new ProductBundle("Игровой сетап", 7)
+        bundles.put("gaming", new ProductBundle("Gaming setup", 7)
                 .add(product(catalog, "Lenovo Legion Tower 5"))
                 .add(product(catalog, "LG UltraGear 27GP850"))
                 .add(product(catalog, "HyperX Cloud II"))
                 .add(keyboardAndMouse));
 
-        bundles.put("home-office", new ProductBundle("Домашний офис", 6)
+        bundles.put("home-office", new ProductBundle("Home office", 6)
                 .add(product(catalog, "Apple Mac mini M4"))
                 .add(product(catalog, "Dell P2423"))
                 .add(product(catalog, "Logitech C920 HD Pro"))
-                .add(new ProductBundle("Клавиатура и мышь", 5)
+                .add(new ProductBundle("Keyboard and mouse", 5)
                         .add(product(catalog, "Logitech MX Keys S"))
                         .add(product(catalog, "Logitech M185"))));
     }

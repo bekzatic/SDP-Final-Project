@@ -5,7 +5,7 @@ public class NoDiscount implements DiscountStrategy {
 
     @Override
     public String getDescription() {
-        return "Без скидки";
+        return "No discount";
     }
 
     @Override

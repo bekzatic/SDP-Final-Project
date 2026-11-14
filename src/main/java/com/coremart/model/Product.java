@@ -77,7 +77,7 @@ public abstract class Product {
     }
 
     public static String formatTenge(long amount) {
-        NumberFormat format = NumberFormat.getIntegerInstance(Locale.forLanguageTag("ru-KZ"));
+        NumberFormat format = NumberFormat.getIntegerInstance(Locale.US);
         return format.format(amount).replace(' ', ' ').replace(' ', ' ') + " ₸";
     }
 

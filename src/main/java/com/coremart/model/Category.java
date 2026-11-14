@@ -2,10 +2,10 @@ package com.coremart.model;
 
 /** Product categories of the store, with the names shown to customers. */
 public enum Category {
-    LAPTOP("Ноутбуки"),
-    DESKTOP_PC("Готовые ПК"),
-    MONITOR("Мониторы"),
-    ACCESSORY("Аксессуары");
+    LAPTOP("Laptops"),
+    DESKTOP_PC("Desktop PCs"),
+    MONITOR("Monitors"),
+    ACCESSORY("Accessories");
 
     private final String displayName;
 

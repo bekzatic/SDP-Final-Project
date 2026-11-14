@@ -42,7 +42,7 @@ public class CheckoutFacade {
      */
     public Order placeOrder(Cart cart, CheckoutForm form) {
         if (cart.isEmpty()) {
-            throw new CheckoutException("Корзина пуста");
+            throw new CheckoutException("Your cart is empty");
         }
         List<String> errors = form.validate();
         if (!errors.isEmpty()) {
@@ -90,7 +90,7 @@ public class CheckoutFacade {
     /** Staff action from the admin page: assemble, ship, mark received or cancel. */
     public Order advance(String orderNumber, OrderAction action) {
         if (action == null || !action.isForStaff()) {
-            throw new IllegalArgumentException("Это действие недоступно сотрудникам");
+            throw new IllegalArgumentException("Staff cannot perform this action");
         }
         if (action == OrderAction.CANCEL) {
             return cancel(orderNumber);
@@ -112,7 +112,7 @@ public class CheckoutFacade {
 
     private Order find(String orderNumber) {
         return orders.findByNumber(orderNumber)
-                .orElseThrow(() -> new IllegalArgumentException("Заказ " + orderNumber + " не найден"));
+                .orElseThrow(() -> new IllegalArgumentException("Order " + orderNumber + " not found"));
     }
 
     /** Takes everything or nothing: if one product is missing, the ones already taken go back. */
@@ -133,10 +133,10 @@ public class CheckoutFacade {
         for (Map.Entry<Product, Integer> e : needed.entrySet()) {
             int left = catalog.findById(e.getKey().getId()).map(Product::getStock).orElse(0);
             if (left < e.getValue()) {
-                return "«" + e.getKey().getFullName() + "»: в наличии только " + left + " шт., измените количество в корзине";
+                return "“" + e.getKey().getFullName() + "”: only " + left + " left in stock, please change the quantity in your cart";
             }
         }
-        return "Часть товаров закончилась, проверьте корзину";
+        return "Some items are out of stock, please check your cart";
     }
 
     private void takePayment(Order order) {

@@ -21,14 +21,14 @@ public class ShippedState implements OrderState {
 
     @Override
     public String getName() {
-        return delivery == DeliveryMethod.PICKUP ? "Готов к выдаче" : "Передан курьеру";
+        return delivery == DeliveryMethod.PICKUP ? "Ready for pickup" : "With courier";
     }
 
     @Override
     public String getDescription() {
         return delivery == DeliveryMethod.PICKUP
-                ? "Заказ ждёт вас в магазине. Назовите номер заказа на кассе."
-                : "Курьер привезёт заказ и заранее позвонит.";
+                ? "Your order is waiting in the store. Tell the cashier your order number."
+                : "The courier will call ahead and bring your order.";
     }
 
     @Override

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head(title)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,19 +10,19 @@
 
 <header class="site-header" th:fragment="header">
     <div class="container header-inner">
-        <a class="logo" th:href="@{/}" aria-label="CoreMart — на главную">
+        <a class="logo" th:href="@{/}" aria-label="CoreMart home">
             <span class="logo-mark" aria-hidden="true"></span>
             <span><span class="logo-core">Core</span>Mart</span>
         </a>
-        <nav class="main-nav" aria-label="Основное меню">
-            <a th:href="@{/catalog}">Каталог</a>
-            <a th:href="@{/catalog(category='LAPTOP')}">Ноутбуки</a>
-            <a th:href="@{/catalog(category='DESKTOP_PC')}">Готовые ПК</a>
-            <a th:href="@{/catalog(category='MONITOR')}">Мониторы</a>
-            <a th:href="@{/catalog(category='ACCESSORY')}">Аксессуары</a>
-            <a th:href="@{/bundles}">Комплекты</a>
-            <a th:href="@{/orders}">Мои заказы</a>
-            <a class="cart-link" th:href="@{/cart}">Корзина
+        <nav class="main-nav" aria-label="Main menu">
+            <a th:href="@{/catalog}">Catalog</a>
+            <a th:href="@{/catalog(category='LAPTOP')}">Laptops</a>
+            <a th:href="@{/catalog(category='DESKTOP_PC')}">Desktop PCs</a>
+            <a th:href="@{/catalog(category='MONITOR')}">Monitors</a>
+            <a th:href="@{/catalog(category='ACCESSORY')}">Accessories</a>
+            <a th:href="@{/bundles}">Bundles</a>
+            <a th:href="@{/orders}">My orders</a>
+            <a class="cart-link" th:href="@{/cart}">Cart
                 <span class="cart-count" th:text="${cartCount} ?: 0">0</span></a>
         </nav>
     </div>
@@ -30,22 +30,22 @@
 
 <footer class="site-footer" th:fragment="footer">
     <div class="container footer-inner">
-        <span><span class="logo-core">Core</span>Mart — магазин компьютерной техники</span>
-        <span class="muted">Учебный проект по паттернам проектирования ·
-            <a th:href="@{/admin}">Для сотрудников</a></span>
+        <span><span class="logo-core">Core</span>Mart — computer hardware store</span>
+        <span class="muted">Student project on design patterns ·
+            <a th:href="@{/admin}">Staff area</a></span>
     </div>
 </footer>
 
 <!-- One-time messages after an action (added to cart, promo code applied, errors). -->
 <th:block th:fragment="flash">
-    <div class="flash flash-ok" th:if="${message}" th:text="${message}" role="status">Готово</div>
-    <div class="flash flash-error" th:if="${error}" th:text="${error}" role="alert">Ошибка</div>
+    <div class="flash flash-ok" th:if="${message}" th:text="${message}" role="status">Done</div>
+    <div class="flash flash-error" th:if="${error}" th:text="${error}" role="alert">Error</div>
 </th:block>
 
 <!-- Order status badge; the colour comes from the state code (NEW, PAID, ...). -->
 <span th:fragment="status(order)" class="status"
       th:classappend="'status-' + ${#strings.toLowerCase(order.state.code)}"
-      th:text="${order.statusName}">Статус</span>
+      th:text="${order.statusName}">Status</span>
 
 <!-- Simple line icons for the product categories, drawn with SVG (no photos). -->
 <th:block th:fragment="icon(category)" th:switch="${category.name()}">

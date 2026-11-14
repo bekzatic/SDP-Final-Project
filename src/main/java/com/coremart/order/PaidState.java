@@ -12,12 +12,12 @@ public class PaidState implements OrderState {
 
     @Override
     public String getName() {
-        return "Оплачен";
+        return "Paid";
     }
 
     @Override
     public String getDescription() {
-        return "Оплата получена. Скоро заказ начнут собирать.";
+        return "Payment received. We will start assembling your order soon.";
     }
 
     @Override

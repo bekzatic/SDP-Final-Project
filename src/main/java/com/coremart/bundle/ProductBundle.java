@@ -10,8 +10,8 @@ import java.util.List;
  * COMPOSITE pattern - the <b>Composite</b>.
  * <p>
  * A bundle is a group of store items sold together at a discount. Its children can be single
- * products or other bundles, so bundles can be nested ("Игровой сетап" contains the bundle
- * "Клавиатура и мышь"). A bundle answers every {@link StoreItem} question by asking its
+ * products or other bundles, so bundles can be nested ("Gaming setup" contains the bundle
+ * "Keyboard and mouse"). A bundle answers every {@link StoreItem} question by asking its
  * children: the price is the sum of the children's prices minus the bundle discount, and the
  * bundle is available only when every child is available.
  */

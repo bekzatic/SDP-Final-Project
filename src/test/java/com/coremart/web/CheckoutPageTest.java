@@ -62,10 +62,10 @@ class CheckoutPageTest {
     /** Places an order and returns its page address, e.g. /orders/CM-1001. */
     private String checkout(String delivery, String payment) throws Exception {
         String url = mvc.perform(post("/checkout").session(session)
-                        .param("name", "Айгерим")
+                        .param("name", "Aigerim")
                         .param("phone", "+7 701 123 45 67")
                         .param("email", "aigerim@example.com")
-                        .param("address", "ул. Абая, 10")
+                        .param("address", "10 Abai St.")
                         .param("delivery", delivery)
                         .param("payment", payment))
                 .andExpect(status().is3xxRedirection())
@@ -89,7 +89,7 @@ class CheckoutPageTest {
                 .andExpect(content().string(containsString("href=\"/checkout\"")));
         mvc.perform(get("/checkout").session(session))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Оформление заказа")))
+                .andExpect(content().string(containsString("Checkout")))
                 .andExpect(content().string(containsString(mouse.getFullName() + " × 1")))
                 .andExpect(content().string(containsString("value=\"COURIER\"")))
                 .andExpect(content().string(containsString("value=\"LATER\"")));
@@ -99,11 +99,11 @@ class CheckoutPageTest {
     void wrongDataShowsTheFormAgain() throws Exception {
         addMouse(1);
         mvc.perform(post("/checkout").session(session)
-                        .param("name", "А").param("phone", "12").param("email", "x")
+                        .param("name", "A").param("phone", "12").param("email", "x")
                         .param("delivery", "COURIER").param("payment", "CARD_NOW"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Проверьте данные")))
-                .andExpect(content().string(containsString("Укажите адрес доставки")))
+                .andExpect(content().string(containsString("Please check your details")))
+                .andExpect(content().string(containsString("Enter a delivery address")))
                 .andExpect(content().string(containsString("value=\"12\"")));
         assertEquals(stockBefore.get(mouse.getId()), mouse.getStock());
     }
@@ -113,8 +113,8 @@ class CheckoutPageTest {
         addMouse(1);
         String url = checkout("TELEPORT", "BARTER");
         mvc.perform(get(url).session(session))
-                .andExpect(content().string(containsString("Самовывоз из магазина")))
-                .andExpect(content().string(containsString("Оплачен")));
+                .andExpect(content().string(containsString("Store pickup")))
+                .andExpect(content().string(containsString("Paid")));
     }
 
     @Test
@@ -126,16 +126,16 @@ class CheckoutPageTest {
         assertEquals(stockBefore.get(mouse.getId()) - 2, mouse.getStock());
         mvc.perform(get(url).session(session))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Заказ " + number + " оформлен. Спасибо!")))
+                .andExpect(content().string(containsString("Order " + number + " placed. Thank you!")))
                 .andExpect(content().string(containsString("status status-paid")))
-                .andExpect(content().string(containsString("Оплачено, платёж PAY-")))
-                .andExpect(content().string(containsString("Курьер по городу")))
-                .andExpect(content().string(containsString("Заказ " + number + ": «Оплачен».")))
+                .andExpect(content().string(containsString("Paid, payment PAY-")))
+                .andExpect(content().string(containsString("City courier")))
+                .andExpect(content().string(containsString("Order " + number + ": “Paid”.")))
                 .andExpect(content().string(containsString("<span class=\"cart-count\">0</span>")))
                 .andExpect(content().string(not(containsString("action=\"" + url + "/pay\""))));
         mvc.perform(get("/orders").session(session))
-                .andExpect(content().string(containsString("Заказ " + number)))
-                .andExpect(content().string(containsString("Заказов: 1")));
+                .andExpect(content().string(containsString("Order " + number)))
+                .andExpect(content().string(containsString("Orders: 1")));
     }
 
     @Test
@@ -143,21 +143,21 @@ class CheckoutPageTest {
         addMouse(1);
         String url = checkout("PICKUP", "LATER");
         mvc.perform(get(url).session(session))
-                .andExpect(content().string(containsString("Ожидает оплаты")))
+                .andExpect(content().string(containsString("Awaiting payment")))
                 .andExpect(content().string(containsString("action=\"" + url + "/pay\"")))
                 .andExpect(content().string(containsString("action=\"" + url + "/cancel\"")));
 
         mvc.perform(post(url + "/pay").session(session))
                 .andExpect(redirectedUrl(url))
-                .andExpect(flash().attribute("message", "Оплата прошла успешно"));
+                .andExpect(flash().attribute("message", "Payment successful"));
         mvc.perform(post(url + "/pay").session(session))
                 .andExpect(flash().attributeExists("error"));
 
         mvc.perform(post(url + "/cancel").session(session))
-                .andExpect(flash().attribute("message", "Заказ отменён"));
+                .andExpect(flash().attribute("message", "Order cancelled"));
         mvc.perform(get(url).session(session))
                 .andExpect(content().string(containsString("status status-cancelled")))
-                .andExpect(content().string(containsString("Деньги вернутся на карту")));
+                .andExpect(content().string(containsString("The money will be returned to your card")));
         assertEquals(stockBefore.get(mouse.getId()), mouse.getStock(), "stock is back after cancelling");
     }
 
@@ -169,7 +169,7 @@ class CheckoutPageTest {
         mvc.perform(get(url).session(stranger)).andExpect(status().isNotFound());
         mvc.perform(post(url + "/cancel").session(stranger)).andExpect(redirectedUrl("/orders"));
         mvc.perform(get("/orders").session(stranger))
-                .andExpect(content().string(containsString("Заказов пока нет.")));
+                .andExpect(content().string(containsString("No orders yet.")));
         mvc.perform(get("/orders/CM-999999").session(session)).andExpect(status().isNotFound());
     }
 }

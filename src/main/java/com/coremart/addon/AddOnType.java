@@ -12,19 +12,19 @@ import java.util.Optional;
  */
 public enum AddOnType {
 
-    WARRANTY_1Y("Гарантия +1 год") {
+    WARRANTY_1Y("Warranty +1 year") {
         @Override
         public StoreItem wrap(StoreItem item) { return new WarrantyAddOn(item, 1); }
     },
-    WARRANTY_2Y("Гарантия +2 года") {
+    WARRANTY_2Y("Warranty +2 years") {
         @Override
         public StoreItem wrap(StoreItem item) { return new WarrantyAddOn(item, 2); }
     },
-    GIFT_WRAP("Подарочная упаковка") {
+    GIFT_WRAP("Gift wrapping") {
         @Override
         public StoreItem wrap(StoreItem item) { return new GiftWrapAddOn(item); }
     },
-    SETUP("Установка и настройка ПО") {
+    SETUP("Software setup") {
         @Override
         public StoreItem wrap(StoreItem item) { return new SetupAddOn(item); }
 

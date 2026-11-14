@@ -60,8 +60,8 @@ class StoreJourneyTest {
 
         // Facade: checkout in one call
         String url = mvc.perform(post("/checkout").session(session)
-                        .param("name", "Данияр").param("phone", "+7 705 111 22 33")
-                        .param("email", "daniyar@example.com").param("address", "ул. Сатпаева, 22")
+                        .param("name", "Daniyar").param("phone", "+7 705 111 22 33")
+                        .param("email", "daniyar@example.com").param("address", "22 Satpayev St.")
                         .param("delivery", "COURIER").param("payment", "LATER"))
                 .andReturn().getResponse().getRedirectedUrl();
         String number = url.substring("/orders/".length());
@@ -75,13 +75,13 @@ class StoreJourneyTest {
         // Observer: the customer got an email about every step
         mvc.perform(get(url).session(session))
                 .andExpect(content().string(containsString("status status-delivered")))
-                .andExpect(content().string(containsString("+ Расширенная гарантия +1 год")))
-                .andExpect(content().string(containsString("Домашний офис")))
-                .andExpect(content().string(containsString("Промокод SALE15")))
-                .andExpect(content().string(containsString("Заказ " + number + " оформлен.")))
-                .andExpect(content().string(containsString("Заказ " + number + ": «Оплачен».")))
-                .andExpect(content().string(containsString("Заказ " + number + ": «Собирается».")))
-                .andExpect(content().string(containsString("Заказ " + number + ": «Передан курьеру».")))
-                .andExpect(content().string(containsString("Заказ " + number + ": «Получен».")));
+                .andExpect(content().string(containsString("+ Extended warranty +1 year")))
+                .andExpect(content().string(containsString("Home office")))
+                .andExpect(content().string(containsString("Promo code SALE15")))
+                .andExpect(content().string(containsString("Order " + number + " placed.")))
+                .andExpect(content().string(containsString("Order " + number + ": “Paid”.")))
+                .andExpect(content().string(containsString("Order " + number + ": “Assembling”.")))
+                .andExpect(content().string(containsString("Order " + number + ": “With courier”.")))
+                .andExpect(content().string(containsString("Order " + number + ": “Delivered”.")));
     }
 }

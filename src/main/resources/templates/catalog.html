@@ -1,34 +1,34 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head(${selected != null ? selected.displayName : 'Каталог'})}"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${selected != null ? selected.displayName : 'Catalog'})}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 
 <main class="container">
     <section class="hero">
-        <h1 th:text="${selected != null ? selected.displayName : 'Каталог техники'}">Каталог техники</h1>
-        <p class="muted">Ноутбуки, готовые компьютеры, мониторы и аксессуары от проверенных брендов.</p>
+        <h1 th:text="${selected != null ? selected.displayName : 'Tech catalog'}">Tech catalog</h1>
+        <p class="muted">Laptops, desktop PCs, monitors and accessories from trusted brands.</p>
     </section>
 
-    <nav class="chips" aria-label="Категории">
+    <nav class="chips" aria-label="Categories">
         <a class="chip" th:classappend="${selected == null} ? 'active'"
-           th:href="${sort.code == 'default'} ? @{/catalog} : @{/catalog(sort=${sort.code})}">Все товары</a>
+           th:href="${sort.code == 'default'} ? @{/catalog} : @{/catalog(sort=${sort.code})}">All products</a>
         <a class="chip" th:each="c : ${categories}"
            th:classappend="${c == selected} ? 'active'"
            th:href="${sort.code == 'default'} ? @{/catalog(category=${c.name()})} : @{/catalog(category=${c.name()},sort=${sort.code})}"
-           th:text="${c.displayName}">Категория</a>
+           th:text="${c.displayName}">Category</a>
     </nav>
 
     <div class="toolbar">
-        <p class="result-count muted" th:text="'Найдено товаров: ' + ${#lists.size(products)}">Найдено товаров: 0</p>
+        <p class="result-count muted" th:text="'Products found: ' + ${#lists.size(products)}">Products found: 0</p>
         <form class="sort-form" th:action="@{/catalog}" method="get">
             <input type="hidden" name="category" th:if="${selected != null}" th:value="${selected.name()}">
-            <label for="sort" class="muted">Сортировка:</label>
+            <label for="sort" class="muted">Sort by:</label>
             <select id="sort" name="sort" onchange="this.form.submit()">
                 <option th:each="s : ${sorts}" th:value="${s.code}" th:text="${s.label}"
-                        th:selected="${s.code == sort.code}">По умолчанию</option>
+                        th:selected="${s.code == sort.code}">Default</option>
             </select>
-            <noscript><button type="submit">Показать</button></noscript>
+            <noscript><button type="submit">Show</button></noscript>
         </form>
     </div>
 
@@ -38,7 +38,7 @@
                 <th:block th:replace="~{fragments/layout :: icon(${p.category})}"></th:block>
             </div>
             <div class="card-body">
-                <span class="card-category" th:text="${p.category.displayName}">Ноутбуки</span>
+                <span class="card-category" th:text="${p.category.displayName}">Laptops</span>
                 <h2 class="card-title">
                     <a class="card-link" th:href="@{/product/{id}(id=${p.id})}">
                         <span class="card-brand" th:text="${p.brand}">Brand</span>
@@ -47,23 +47,23 @@
                 </h2>
                 <ul class="card-specs">
                     <li th:each="s, st : ${p.specs}" th:if="${st.index < 3}">
-                        <span class="muted" th:text="${s.key}">Характеристика</span>
-                        <span th:text="${s.value}">Значение</span>
+                        <span class="muted" th:text="${s.key}">Spec</span>
+                        <span th:text="${s.value}">Value</span>
                     </li>
                 </ul>
                 <div class="card-footer">
                     <span class="price" th:text="${p.formattedPrice}">0 ₸</span>
-                    <span th:if="${p.stock == 0}" class="badge badge-out">Нет в наличии</span>
+                    <span th:if="${p.stock == 0}" class="badge badge-out">Out of stock</span>
                     <span th:if="${p.stock > 0 and p.stock <= lowStock}" class="badge badge-low"
-                          th:text="'Мало: ' + ${p.stock} + ' шт.'">Мало</span>
+                          th:text="'Low stock: ' + ${p.stock} + ' pcs.'">Low stock</span>
                     <span th:if="${p.stock > lowStock}" class="badge badge-in"
-                          th:text="'В наличии: ' + ${p.stock} + ' шт.'">В наличии</span>
+                          th:text="'In stock: ' + ${p.stock} + ' pcs.'">In stock</span>
                 </div>
             </div>
         </article>
     </div>
 
-    <p class="empty muted" th:if="${#lists.isEmpty(products)}">В этой категории пока нет товаров.</p>
+    <p class="empty muted" th:if="${#lists.isEmpty(products)}">No products in this category yet.</p>
 </main>
 
 <footer th:replace="~{fragments/layout :: footer}"></footer>

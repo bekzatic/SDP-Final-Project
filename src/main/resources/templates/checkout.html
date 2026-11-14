@@ -1,32 +1,32 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/layout :: head('Оформление заказа')}"></head>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Checkout')}"></head>
 <body>
 <header th:replace="~{fragments/layout :: header}"></header>
 
 <main class="container">
     <section class="hero">
-        <h1>Оформление заказа</h1>
-        <p class="muted">Заполните данные: на email придут уведомления о каждом шаге заказа.</p>
+        <h1>Checkout</h1>
+        <p class="muted">Fill in your details: we will email you about every step of the order.</p>
     </section>
 
     <div class="flash flash-error" role="alert" th:if="${!#lists.isEmpty(errors)}">
-        <p class="flash-title">Проверьте данные:</p>
+        <p class="flash-title">Please check your details:</p>
         <ul class="error-list">
-            <li th:each="e : ${errors}" th:text="${e}">Ошибка</li>
+            <li th:each="e : ${errors}" th:text="${e}">Error</li>
         </ul>
     </div>
 
     <form class="cart-layout" th:action="@{/checkout}" th:object="${form}" method="post">
         <section class="checkout-form">
             <fieldset class="form-block">
-                <legend>Покупатель</legend>
+                <legend>Customer</legend>
                 <label class="field">
-                    <span>Имя</span>
+                    <span>Name</span>
                     <input type="text" th:field="*{name}" autocomplete="name" required maxlength="60">
                 </label>
                 <label class="field">
-                    <span>Телефон</span>
+                    <span>Phone</span>
                     <input type="tel" th:field="*{phone}" autocomplete="tel" placeholder="+7 701 123 45 67"
                            required maxlength="20">
                 </label>
@@ -37,47 +37,47 @@
             </fieldset>
 
             <fieldset class="form-block">
-                <legend>Получение</legend>
+                <legend>Delivery</legend>
                 <label class="service" th:each="d : ${deliveries}">
                     <input type="radio" th:field="*{delivery}" th:value="${d}">
-                    <span th:text="${d.label}">Самовывоз</span>
-                    <span class="muted" th:text="${d.priceText}">бесплатно</span>
+                    <span th:text="${d.label}">Pickup</span>
+                    <span class="muted" th:text="${d.priceText}">free</span>
                 </label>
                 <label class="field">
-                    <span>Адрес доставки <span class="muted">(для курьера)</span></span>
+                    <span>Delivery address <span class="muted">(for courier)</span></span>
                     <input type="text" th:field="*{address}" autocomplete="street-address"
-                           placeholder="Улица, дом, квартира" maxlength="120">
+                           placeholder="Street, building, apartment" maxlength="120">
                 </label>
             </fieldset>
 
             <fieldset class="form-block">
-                <legend>Оплата</legend>
+                <legend>Payment</legend>
                 <label class="service" th:each="p : ${payments}">
                     <input type="radio" th:field="*{payment}" th:value="${p}">
-                    <span th:text="${p.label}">Картой сейчас</span>
+                    <span th:text="${p.label}">Card now</span>
                     <span></span>
                 </label>
-                <p class="muted small">Учебный магазин: оплата условная, данные карты не нужны.</p>
+                <p class="muted small">Demo store: payment is simulated, no card details needed.</p>
             </fieldset>
         </section>
 
         <aside class="cart-summary">
-            <h2>Ваш заказ</h2>
+            <h2>Your order</h2>
             <div class="summary-row" th:each="line : ${cart.lines}">
-                <span th:text="${line.item.title} + ' × ' + ${line.quantity}">Товар × 1</span>
+                <span th:text="${line.item.title} + ' × ' + ${line.quantity}">Product × 1</span>
                 <span th:text="${line.formattedTotal}">0 ₸</span>
             </div>
             <div class="summary-row" th:if="${cart.promoCode != null}">
-                <span class="muted" th:text="'Промокод ' + ${cart.promoCode}">Промокод</span>
+                <span class="muted" th:text="'Promo code ' + ${cart.promoCode}">Promo code</span>
                 <span class="discount" th:text="'− ' + ${cart.formattedDiscount}">− 0 ₸</span>
             </div>
             <div class="summary-row summary-total">
-                <span>Итого</span>
+                <span>Total</span>
                 <span th:text="${cart.formattedTotal}">0 ₸</span>
             </div>
-            <p class="muted small">Стоимость доставки добавится по выбранному способу.</p>
-            <button type="submit" class="button button-wide">Подтвердить заказ</button>
-            <a class="link-button" th:href="@{/cart}">Вернуться в корзину</a>
+            <p class="muted small">Delivery cost is added based on the chosen method.</p>
+            <button type="submit" class="button button-wide">Place order</button>
+            <a class="link-button" th:href="@{/cart}">Back to cart</a>
         </aside>
     </form>
 </main>

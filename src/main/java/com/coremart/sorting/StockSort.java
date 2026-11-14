@@ -14,7 +14,7 @@ public class StockSort extends ComparatorSort {
 
     @Override
     public String getLabel() {
-        return "Больше в наличии";
+        return "Most in stock";
     }
 
     @Override

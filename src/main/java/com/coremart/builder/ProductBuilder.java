@@ -30,8 +30,8 @@ public final class ProductBuilder {
 
     /** Defaults for characteristics that a customer rarely needs to specify. */
     private static final Map<Category, Map<String, Object>> DEFAULTS = Map.of(
-            Category.LAPTOP, Map.of("gpu", "Встроенная графика"),
-            Category.DESKTOP_PC, Map.of("gpu", "Встроенная графика", "formFactor", "Tower"),
+            Category.LAPTOP, Map.of("gpu", "Integrated graphics"),
+            Category.DESKTOP_PC, Map.of("gpu", "Integrated graphics", "formFactor", "Tower"),
             Category.MONITOR, Map.of("refreshRateHz", 60, "panelType", "IPS"),
             Category.ACCESSORY, Map.of("connection", "USB"));
 

@@ -26,7 +26,7 @@ public class SetupAddOn extends AddOnDecorator {
 
     @Override
     public String getAddOnName() {
-        return "Установка и настройка ПО";
+        return "Software setup";
     }
 
     @Override

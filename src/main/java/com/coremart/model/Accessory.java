@@ -27,8 +27,8 @@ public class Accessory extends Product {
     @Override
     public Map<String, String> getSpecs() {
         Map<String, String> specs = new LinkedHashMap<>();
-        specs.put("Тип", type);
-        specs.put("Подключение", connection);
+        specs.put("Type", type);
+        specs.put("Connection", connection);
         return specs;
     }
 }

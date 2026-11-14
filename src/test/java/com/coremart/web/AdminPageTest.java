@@ -55,8 +55,8 @@ class AdminPageTest {
                 .param("productId", String.valueOf(product.getId()))
                 .param("quantity", String.valueOf(quantity)));
         String url = mvc.perform(post("/checkout").session(customer)
-                        .param("name", "Ерлан").param("phone", "+7 702 765 43 21")
-                        .param("email", "erlan@example.com").param("address", "пр. Достык, 5")
+                        .param("name", "Erlan").param("phone", "+7 702 765 43 21")
+                        .param("email", "erlan@example.com").param("address", "5 Dostyk Ave.")
                         .param("delivery", "COURIER").param("payment", payment))
                 .andReturn().getResponse().getRedirectedUrl();
         return url.substring("/orders/".length());
@@ -66,7 +66,7 @@ class AdminPageTest {
     void adminPageShowsOrdersStockAndAlerts() throws Exception {
         mvc.perform(get("/admin"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Для сотрудников")))
+                .andExpect(content().string(containsString("Staff area")))
                 .andExpect(content().string(containsString(mouse.getFullName())))
                 .andExpect(content().string(containsString("action=\"/admin/stock\"")));
     }
@@ -82,14 +82,14 @@ class AdminPageTest {
 
         mvc.perform(post(base + "/ship")).andExpect(redirectedUrl("/admin"))
                 .andExpect(flash().attribute("error",
-                        "Действие «Передать в доставку» недоступно: заказ в статусе «Оплачен»"));
+                        "Action “Ship” is not available: the order status is “Paid”"));
         mvc.perform(post(base + "/start_assembly"))
-                .andExpect(flash().attribute("message", "Заказ " + number + ": «Собирается»"));
+                .andExpect(flash().attribute("message", "Order " + number + ": “Assembling”"));
         mvc.perform(post(base + "/ship"))
-                .andExpect(flash().attribute("message", "Заказ " + number + ": «Передан курьеру»"));
+                .andExpect(flash().attribute("message", "Order " + number + ": “With courier”"));
         mvc.perform(post(base + "/cancel")).andExpect(flash().attributeExists("error"));
         mvc.perform(post(base + "/deliver"))
-                .andExpect(flash().attribute("message", "Заказ " + number + ": «Получен»"));
+                .andExpect(flash().attribute("message", "Order " + number + ": “Delivered”"));
         mvc.perform(get("/admin"))
                 .andExpect(content().string(containsString("status status-delivered")));
     }
@@ -98,11 +98,11 @@ class AdminPageTest {
     void staffCannotPayAndUnknownActionsAreRefused() throws Exception {
         String number = placeOrder(mouse, 1, "LATER");
         mvc.perform(post("/admin/orders/" + number + "/pay"))
-                .andExpect(flash().attribute("error", "Это действие недоступно сотрудникам"));
+                .andExpect(flash().attribute("error", "Staff cannot perform this action"));
         mvc.perform(post("/admin/orders/" + number + "/explode"))
-                .andExpect(flash().attribute("error", "Это действие недоступно сотрудникам"));
+                .andExpect(flash().attribute("error", "Staff cannot perform this action"));
         mvc.perform(post("/admin/orders/CM-999999/ship"))
-                .andExpect(flash().attribute("error", "Заказ CM-999999 не найден"));
+                .andExpect(flash().attribute("error", "Order CM-999999 not found"));
     }
 
     @Test
@@ -111,10 +111,10 @@ class AdminPageTest {
         String number = placeOrder(mouse, 2, "CARD_NOW");
         assertEquals(before - 2, mouse.getStock());
         mvc.perform(post("/admin/orders/" + number + "/cancel"))
-                .andExpect(flash().attribute("message", "Заказ " + number + ": «Отменён»"));
+                .andExpect(flash().attribute("message", "Order " + number + ": “Cancelled”"));
         assertEquals(before, mouse.getStock());
         mvc.perform(get("/admin"))
-                .andExpect(content().string(containsString("Заказ " + number + " отменён, товары возвращены на склад.")));
+                .andExpect(content().string(containsString("Order " + number + " cancelled, items returned to stock.")));
     }
 
     @Test
@@ -123,17 +123,17 @@ class AdminPageTest {
                 .findFirst().orElseThrow();
         String number = placeOrder(rare, rare.getStock() - 1, "LATER");
         mvc.perform(get("/admin"))
-                .andExpect(content().string(containsString("Заканчивается «" + rare.getFullName() + "»: осталось 1 шт.")))
+                .andExpect(content().string(containsString("Running low on “" + rare.getFullName() + "”: 1 left")))
                 .andExpect(content().string(containsString(number)));
 
         mvc.perform(post("/admin/stock").param("productId", String.valueOf(rare.getId())).param("quantity", "10"))
                 .andExpect(redirectedUrl("/admin"))
-                .andExpect(flash().attribute("message", "«" + rare.getFullName() + "»: на складе 11 шт."));
+                .andExpect(flash().attribute("message", "“" + rare.getFullName() + "”: 11 in stock"));
         assertEquals(11, rare.getStock());
 
         mvc.perform(post("/admin/stock").param("productId", String.valueOf(rare.getId())).param("quantity", "0"))
-                .andExpect(flash().attribute("error", "Количество должно быть от 1 до 100"));
+                .andExpect(flash().attribute("error", "Quantity must be between 1 and 100"));
         mvc.perform(post("/admin/stock").param("productId", "999999").param("quantity", "1"))
-                .andExpect(flash().attribute("error", "Товар не найден"));
+                .andExpect(flash().attribute("error", "Product not found"));
     }
 }

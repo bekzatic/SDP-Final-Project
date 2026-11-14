@@ -12,12 +12,12 @@ public class AssemblingState implements OrderState {
 
     @Override
     public String getName() {
-        return "Собирается";
+        return "Assembling";
     }
 
     @Override
     public String getDescription() {
-        return "Заказ собирают и проверяют на складе.";
+        return "Your order is being assembled and checked at the warehouse.";
     }
 
     @Override

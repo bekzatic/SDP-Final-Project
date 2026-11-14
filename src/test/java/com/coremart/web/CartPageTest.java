@@ -40,7 +40,7 @@ class CartPageTest {
     void emptyCart() throws Exception {
         mvc.perform(get("/cart").session(new MockHttpSession()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Пока пусто.")))
+                .andExpect(content().string(containsString("Nothing here yet.")))
                 .andExpect(content().string(containsString("<span class=\"cart-count\">0</span>")));
     }
 
@@ -69,8 +69,8 @@ class CartPageTest {
         mvc.perform(get("/cart").session(session))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(laptop.getFullName())))
-                .andExpect(content().string(containsString("+ Расширенная гарантия +1 год")))
-                .andExpect(content().string(containsString("+ Подарочная упаковка")))
+                .andExpect(content().string(containsString("+ Extended warranty +1 year")))
+                .andExpect(content().string(containsString("+ Gift wrapping")))
                 .andExpect(content().string(containsString("<span class=\"cart-count\">1</span>")));
 
         mvc.perform(post("/cart/update").session(session).param("lineId", "1").param("quantity", "2"))
@@ -81,7 +81,7 @@ class CartPageTest {
         mvc.perform(post("/cart/remove").session(session).param("lineId", "1"))
                 .andExpect(redirectedUrl("/cart"));
         mvc.perform(get("/cart").session(session))
-                .andExpect(content().string(containsString("Пока пусто.")));
+                .andExpect(content().string(containsString("Nothing here yet.")));
     }
 
     @Test
@@ -91,13 +91,13 @@ class CartPageTest {
 
         mvc.perform(post("/cart/promo").session(session).param("code", "nope"))
                 .andExpect(redirectedUrl("/cart"))
-                .andExpect(flash().attribute("error", "Промокод «nope» не найден"));
+                .andExpect(flash().attribute("error", "Promo code “nope” not found"));
 
         mvc.perform(post("/cart/promo").session(session).param("code", "student10"))
-                .andExpect(flash().attribute("message", "Промокод STUDENT10 применён"));
+                .andExpect(flash().attribute("message", "Promo code STUDENT10 applied"));
         mvc.perform(get("/cart").session(session))
-                .andExpect(content().string(containsString("Промокод STUDENT10")))
-                .andExpect(content().string(containsString("Скидка 10%")));
+                .andExpect(content().string(containsString("Promo code STUDENT10")))
+                .andExpect(content().string(containsString("Discount 10%")));
 
         mvc.perform(post("/cart/promo/remove").session(session)).andExpect(redirectedUrl("/cart"));
         mvc.perform(get("/cart").session(session))
@@ -113,6 +113,6 @@ class CartPageTest {
                 .andExpect(flash().attributeExists("error"));
         mvc.perform(post("/cart/add").param("productId", "999999"))
                 .andExpect(redirectedUrl("/catalog"))
-                .andExpect(flash().attribute("error", "Товар не найден"));
+                .andExpect(flash().attribute("error", "Product not found"));
     }
 }
