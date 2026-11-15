@@ -22,11 +22,12 @@ import java.util.Optional;
 @Controller
 public class CartController {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog;
     private final Cart cart;
     private final BundleCatalog bundles;
 
-    public CartController(Cart cart, BundleCatalog bundles) {
+    public CartController(ProductCatalog catalog, Cart cart, BundleCatalog bundles) {
+        this.catalog = catalog;
         this.cart = cart;
         this.bundles = bundles;
     }

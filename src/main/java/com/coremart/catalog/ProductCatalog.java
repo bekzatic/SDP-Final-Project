@@ -4,36 +4,27 @@ import com.coremart.builder.ProductBuilder;
 import com.coremart.model.Category;
 import com.coremart.model.Product;
 
+import org.springframework.stereotype.Component;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 /**
- * SINGLETON pattern - the <b>Singleton</b>.
+ * All products of the store with their stock levels.
  * <p>
- * The store has exactly one catalog: every page, test and the cart must see the same
- * products and the same stock levels. The constructor is private and the only instance is
- * created lazily by the <i>initialization-on-demand holder</i> idiom: the JVM loads
- * {@link Holder} on the first call to {@link #getInstance()}, and class loading is
- * thread-safe, so no locks or {@code volatile} fields are needed.
- * <p>
- * The catalog is filled with products created through {@link ProductBuilder}.
+ * Spring creates one catalog for the application and passes it to every class that needs it,
+ * so all pages, the cart and the checkout see the same stock. The catalog is filled with
+ * products created through {@link ProductBuilder}.
  */
-public final class ProductCatalog {
+@Component
+public class ProductCatalog {
 
     private final Map<Long, Product> products = new LinkedHashMap<>();
 
-    private ProductCatalog() {
+    public ProductCatalog() {
         seed();
-    }
-
-    private static final class Holder {
-        private static final ProductCatalog INSTANCE = new ProductCatalog();
-    }
-
-    public static ProductCatalog getInstance() {
-        return Holder.INSTANCE;
     }
 
     public List<Product> findAll() {

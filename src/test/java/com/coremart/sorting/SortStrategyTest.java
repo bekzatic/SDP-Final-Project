@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SortStrategyTest {
 
-    private final List<Product> products = ProductCatalog.getInstance().findAll();
+    private final List<Product> products = new ProductCatalog().findAll();
 
     @Test
     void priceAscendingPutsTheCheapestFirst() {

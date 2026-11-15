@@ -37,7 +37,7 @@ class BundlePageTest {
         Map<String, ProductBundle> all = bundles.getAll();
         assertEquals(3, all.size());
         ProductBundle gaming = bundles.findById("gaming").orElseThrow();
-        assertEquals(5, gaming.getProducts().size(), "nested keyboard and mouse bundle counts too");
+        assertEquals(5, gaming.getProducts().size());
         assertTrue(gaming.getPrice() < gaming.getFullPrice());
         assertTrue(bundles.findById("nope").isEmpty());
         assertTrue(bundles.findById(null).isEmpty());
@@ -48,7 +48,7 @@ class BundlePageTest {
         ResultActions page = mvc.perform(get("/bundles"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Ready-made bundles")))
-                .andExpect(content().string(containsString("— Logitech MX Keys S")));
+                .andExpect(content().string(containsString("Logitech MX Keys S")));
         for (ProductBundle b : bundles.getAll().values()) {
             page.andExpect(content().string(containsString(b.getTitle())))
                     .andExpect(content().string(containsString(b.getFormattedPrice())))

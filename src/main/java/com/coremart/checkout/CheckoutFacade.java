@@ -25,12 +25,14 @@ import java.util.Optional;
 @Service
 public class CheckoutFacade {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog;
     private final OrderRepository orders;
     private final PaymentService payments;
     private final List<OrderObserver> observers;
 
-    public CheckoutFacade(OrderRepository orders, PaymentService payments, List<OrderObserver> observers) {
+    public CheckoutFacade(ProductCatalog catalog, OrderRepository orders, PaymentService payments,
+                          List<OrderObserver> observers) {
+        this.catalog = catalog;
         this.orders = orders;
         this.payments = payments;
         this.observers = List.copyOf(observers);

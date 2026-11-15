@@ -29,11 +29,12 @@ public class AdminController {
 
     public static final int MAX_RESTOCK = 100;
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog;
     private final CheckoutFacade checkout;
     private final NotificationLog notifications;
 
-    public AdminController(CheckoutFacade checkout, NotificationLog notifications) {
+    public AdminController(ProductCatalog catalog, CheckoutFacade checkout, NotificationLog notifications) {
+        this.catalog = catalog;
         this.checkout = checkout;
         this.notifications = notifications;
     }

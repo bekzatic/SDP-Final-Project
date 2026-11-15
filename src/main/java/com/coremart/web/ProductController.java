@@ -16,14 +16,15 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Product page with all characteristics of one product.
- * Data comes from the single {@link ProductCatalog} instance (Singleton).
- */
+/** Product page with all characteristics of one product. */
 @Controller
 public class ProductController {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog;
+
+    public ProductController(ProductCatalog catalog) {
+        this.catalog = catalog;
+    }
 
     @GetMapping("/product/{id}")
     public String product(@PathVariable("id") String id, Model model, HttpServletResponse response) {

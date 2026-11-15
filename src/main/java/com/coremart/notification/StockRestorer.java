@@ -14,10 +14,11 @@ import java.util.Map;
 @Component
 public class StockRestorer implements OrderObserver {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog;
     private final NotificationLog log;
 
-    public StockRestorer(NotificationLog log) {
+    public StockRestorer(ProductCatalog catalog, NotificationLog log) {
+        this.catalog = catalog;
         this.log = log;
     }
 

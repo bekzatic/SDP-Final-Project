@@ -15,15 +15,18 @@ import java.util.Locale;
 
 /**
  * Catalog page: all products or the products of one category.
- * Data comes from the single {@link ProductCatalog} instance (Singleton); the order is chosen
- * with a {@link SortStrategy} (Strategy) from the {@code sort} parameter.
+ * The order is chosen with a {@link SortStrategy} (Strategy) from the {@code sort} parameter.
  */
 @Controller
 public class CatalogController {
 
     public static final int LOW_STOCK = 3;
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog;
+
+    public CatalogController(ProductCatalog catalog) {
+        this.catalog = catalog;
+    }
 
     @GetMapping({"/", "/catalog"})
     public String catalog(@RequestParam(name = "category", required = false) String category,

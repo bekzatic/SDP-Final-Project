@@ -137,14 +137,14 @@ class OrderObserverTest {
 
     @Test
     void cancelledOrderGoesBackToStock() {
-        ProductCatalog catalog = ProductCatalog.getInstance();
+        ProductCatalog catalog = new ProductCatalog();
         Product mouse = catalog.findByCategory(Category.ACCESSORY).stream()
                 .filter(p -> p.getStock() >= 2).findFirst().orElseThrow();
         int before = mouse.getStock();
         catalog.decreaseStock(mouse.getId(), 2);
 
         Order order = order(mouse, 2);
-        order.subscribe(new StockRestorer(log));
+        order.subscribe(new StockRestorer(catalog, log));
         order.place();
         order.pay();
         assertEquals(before - 2, mouse.getStock(), "paying does not touch the stock");

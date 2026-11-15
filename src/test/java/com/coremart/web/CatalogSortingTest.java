@@ -20,7 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class CatalogSortingTest {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    @Autowired
+    private ProductCatalog catalog;
 
     @Autowired
     private MockMvc mvc;

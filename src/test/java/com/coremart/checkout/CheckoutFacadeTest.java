@@ -37,7 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CheckoutFacadeTest {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog = new ProductCatalog();
     private final Map<Long, Integer> stockBefore = new HashMap<>();
 
     private NotificationLog log;
@@ -54,8 +54,8 @@ class CheckoutFacadeTest {
         log = new NotificationLog();
         payments = new PaymentService();
         orders = new OrderRepository();
-        facade = new CheckoutFacade(orders, payments,
-                List.of(new EmailNotifier(log), new StockAlert(log), new StockRestorer(log)));
+        facade = new CheckoutFacade(catalog, orders, payments,
+                List.of(new EmailNotifier(log), new StockAlert(log), new StockRestorer(catalog, log)));
         cart = new Cart();
         mouse = accessory("M185");
         keyboard = accessory("MX Keys S");

@@ -25,7 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class StoreJourneyTest {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    @Autowired
+    private ProductCatalog catalog;
     private final Map<Long, Integer> stockBefore = new HashMap<>();
 
     @Autowired
@@ -47,7 +48,7 @@ class StoreJourneyTest {
         Product laptop = catalog.findByCategory(Category.LAPTOP).stream()
                 .filter(p -> p.getStock() >= 2).findFirst().orElseThrow();
 
-        // Singleton + Strategy: the catalog sorted by price
+        // Strategy: the catalog sorted by price
         mvc.perform(get("/catalog").param("category", "LAPTOP").param("sort", "price-asc").session(session))
                 .andExpect(content().string(containsString(laptop.getName())));
         // Factory Method + Builder made the product; Decorator adds a warranty and setup

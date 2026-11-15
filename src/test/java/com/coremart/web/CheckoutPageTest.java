@@ -30,7 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class CheckoutPageTest {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    @Autowired
+    private ProductCatalog catalog;
     private final Map<Long, Integer> stockBefore = new HashMap<>();
 
     @Autowired

@@ -4,43 +4,25 @@ import com.coremart.model.Category;
 import com.coremart.model.Product;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Modifier;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProductCatalogTest {
 
-    private final ProductCatalog catalog = ProductCatalog.getInstance();
+    private final ProductCatalog catalog = new ProductCatalog();
 
     @Test
-    void thereIsOnlyOneCatalog() throws Exception {
-        assertSame(catalog, ProductCatalog.getInstance());
-        for (Constructor<?> c : ProductCatalog.class.getDeclaredConstructors()) {
-            assertTrue(Modifier.isPrivate(c.getModifiers()), "constructor must be private");
-        }
-    }
-
-    @Test
-    void allThreadsGetTheSameInstance() throws Exception {
-        Set<ProductCatalog> seen = ConcurrentHashMap.newKeySet();
-        ExecutorService pool = Executors.newFixedThreadPool(8);
-        for (int i = 0; i < 50; i++) {
-            pool.submit(() -> seen.add(ProductCatalog.getInstance()));
-        }
-        pool.shutdown();
-        assertTrue(pool.awaitTermination(5, TimeUnit.SECONDS));
-        assertEquals(1, seen.size());
+    void everyCatalogKeepsItsOwnStock() {
+        ProductCatalog other = new ProductCatalog();
+        Product p = catalog.findAll().get(0);
+        Product same = other.findAll().get(0);
+        assertEquals(p.getFullName(), same.getFullName());
+        catalog.decreaseStock(p.getId(), 1);
+        assertEquals(same.getStock() - 1, p.getStock());
     }
 
     @Test
