@@ -18,8 +18,8 @@ import java.util.Optional;
 /**
  * The shopping cart of one visitor (one per HTTP session).
  * <p>
- * Lines hold {@link StoreItem}s, so the cart treats single products, bundles (Composite) and
- * items with services (Decorator) the same way. The discount is a {@link DiscountStrategy}
+ * Lines hold {@link StoreItem}s, so the cart treats single products, bundles and items with
+ * services (Decorator) the same way. The discount is a {@link DiscountStrategy}
  * (Strategy) that changes when a promo code is applied. The cart only checks stock; it is
  * taken from the catalog at checkout.
  */

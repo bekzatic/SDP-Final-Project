@@ -443,7 +443,6 @@ button.button { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
 .bundle-head h2 { margin: 0; font-size: 20px; }
 .bundle-contents { flex: 1; margin: 0; padding-left: 18px; font-size: 15px; }
 .bundle-contents li { padding: 2px 0; }
-.bundle-contents li.nested { list-style: none; margin-left: 4px; color: var(--muted); font-size: 14px; }
 .bundle-prices { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
 .old-price { color: var(--muted); text-decoration: line-through; }
 

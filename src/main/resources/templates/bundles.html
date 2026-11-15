@@ -20,9 +20,7 @@
             </header>
 
             <ul class="bundle-contents">
-                <li th:each="line : ${b.details}"
-                    th:classappend="${#strings.startsWith(line, '— ')} ? 'nested'"
-                    th:text="${line}">Product</li>
+                <li th:each="line : ${b.details}" th:text="${line}">Product</li>
             </ul>
 
             <div class="bundle-prices">

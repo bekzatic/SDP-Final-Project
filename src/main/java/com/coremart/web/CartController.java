@@ -53,7 +53,7 @@ public class CartController {
         return addToCart(item, quantity, "/product/" + productId, redirect);
     }
 
-    /** Adds a whole bundle; the cart treats it like any other item (Composite). */
+    /** Adds a whole bundle; the cart treats it like any other item. */
     @PostMapping("/cart/add-bundle")
     public String addBundle(@RequestParam("bundleId") String bundleId,
                             @RequestParam(name = "quantity", defaultValue = "1") int quantity,

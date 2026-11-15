@@ -37,7 +37,7 @@ class ProductBundleTest {
     }
 
     @Test
-    void bundlePriceIsTheSumOfChildrenMinusDiscount() {
+    void bundlePriceIsTheSumOfProductsMinusDiscount() {
         ProductBundle bundle = new ProductBundle("For study", 10)
                 .add(laptop(5))
                 .add(accessory("M185", 9_000));
@@ -51,21 +51,18 @@ class ProductBundleTest {
     }
 
     @Test
-    void bundlesCanBeNestedAndAreTreatedLikeAnyOtherItem() {
-        ProductBundle peripherals = new ProductBundle("Keyboard and mouse", 5)
+    void bundleIsTreatedLikeAnyOtherItem() {
+        StoreItem asItem = new ProductBundle("Setup", 0)
+                .add(laptop(3))
                 .add(accessory("MX Keys S", 59_000))
                 .add(accessory("M185", 9_000));
-        ProductBundle setup = new ProductBundle("Setup", 0).add(laptop(3)).add(peripherals);
-
-        StoreItem asItem = setup;
-        assertEquals(389_000 + 64_600, asItem.getPrice());
+        assertEquals(389_000 + 68_000, asItem.getPrice());
         assertEquals(3, asItem.getProducts().size());
-        assertEquals(List.of("Lenovo IdeaPad Slim 5", "Keyboard and mouse",
-                "— Logitech MX Keys S", "— Logitech M185"), asItem.getDetails());
+        assertEquals(List.of("Lenovo IdeaPad Slim 5", "Logitech MX Keys S", "Logitech M185"), asItem.getDetails());
     }
 
     @Test
-    void bundleIsAvailableOnlyWhenEveryChildIs() {
+    void bundleIsAvailableOnlyWhenEveryProductIs() {
         Product laptop = laptop(1);
         ProductBundle bundle = new ProductBundle("Bundle", 5).add(laptop).add(accessory("M185", 9_000));
         assertTrue(bundle.isAvailable());
@@ -79,20 +76,13 @@ class ProductBundleTest {
         assertThrows(IllegalArgumentException.class, () -> new ProductBundle(" ", 5));
         assertThrows(IllegalArgumentException.class, () -> new ProductBundle("Too cheap", 60));
         assertThrows(IllegalArgumentException.class, () -> new ProductBundle("Bundle", -1));
-
-        ProductBundle outer = new ProductBundle("Outer", 0);
-        ProductBundle inner = new ProductBundle("Inner", 0).add(outer);
-        assertThrows(IllegalArgumentException.class, () -> outer.add(outer));
-        assertThrows(IllegalArgumentException.class, () -> outer.add(inner));
-        assertThrows(IllegalArgumentException.class, () -> outer.add((StoreItem) null));
+        assertThrows(IllegalArgumentException.class, () -> new ProductBundle("Bundle", 0).add(null));
     }
 
     @Test
-    void childrenCanBeRemovedButNotChangedFromOutside() {
-        ProductItem mouse = new ProductItem(accessory("M185", 9_000));
-        ProductBundle bundle = new ProductBundle("Bundle", 0).add(mouse);
-        assertThrows(UnsupportedOperationException.class, () -> bundle.getChildren().clear());
-        assertTrue(bundle.remove(mouse));
-        assertEquals(0, bundle.getPrice());
+    void contentsCannotBeChangedFromOutside() {
+        ProductBundle bundle = new ProductBundle("Bundle", 0).add(accessory("M185", 9_000));
+        assertThrows(UnsupportedOperationException.class, () -> bundle.getContents().clear());
+        assertEquals(9_000, bundle.getPrice());
     }
 }

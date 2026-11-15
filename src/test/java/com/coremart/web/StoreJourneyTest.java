@@ -54,7 +54,7 @@ class StoreJourneyTest {
         // Factory Method + Builder made the product; Decorator adds a warranty and setup
         mvc.perform(post("/cart/add").session(session).param("productId", String.valueOf(laptop.getId()))
                 .param("addOns", "WARRANTY_1Y", "SETUP"));
-        // Composite: a bundle with a nested bundle
+        // Abstract Factory made the kit; Visitor lists its contents in the cart
         mvc.perform(post("/cart/add-bundle").session(session).param("bundleId", "home-office"));
         // Strategy: promo code
         mvc.perform(post("/cart/promo").session(session).param("code", "SALE15"));

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-/** Page with the ready-made bundles (Composite). */
+/** Page with the ready-made bundles. */
 @Controller
 public class BundleController {
 

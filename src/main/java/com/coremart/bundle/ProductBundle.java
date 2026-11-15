@@ -1,19 +1,16 @@
 package com.coremart.bundle;
 
 import com.coremart.model.Product;
+import com.coremart.visitor.StoreItemVisitor;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * COMPOSITE pattern - the <b>Composite</b>.
- * <p>
- * A bundle is a group of store items sold together at a discount. Its children can be single
- * products or other bundles, so bundles can be nested ("Gaming setup" contains the bundle
- * "Keyboard and mouse"). A bundle answers every {@link StoreItem} question by asking its
- * children: the price is the sum of the children's prices minus the bundle discount, and the
- * bundle is available only when every child is available.
+ * VISITOR pattern - a <b>Concrete Element</b>: several products sold together at a discount.
+ * The price is the sum of the products' prices minus the bundle discount, and the bundle is
+ * available only when every product is in stock.
  */
 public final class ProductBundle implements StoreItem {
 
@@ -21,7 +18,7 @@ public final class ProductBundle implements StoreItem {
 
     private final String name;
     private final int discountPercent;
-    private final List<StoreItem> children = new ArrayList<>();
+    private final List<Product> contents = new ArrayList<>();
 
     public ProductBundle(String name, int discountPercent) {
         if (name == null || name.isBlank()) {
@@ -34,45 +31,24 @@ public final class ProductBundle implements StoreItem {
         this.discountPercent = discountPercent;
     }
 
-    public ProductBundle add(StoreItem item) {
-        if (item == null) {
-            throw new IllegalArgumentException("Item is required");
+    public ProductBundle add(Product product) {
+        if (product == null) {
+            throw new IllegalArgumentException("Product is required");
         }
-        if (item == this || (item instanceof ProductBundle b && b.contains(this))) {
-            throw new IllegalArgumentException("A bundle cannot contain itself");
-        }
-        children.add(item);
+        contents.add(product);
         return this;
     }
 
-    public ProductBundle add(Product product) {
-        return add(new ProductItem(product));
-    }
-
-    public boolean remove(StoreItem item) {
-        return children.remove(item);
-    }
-
-    public List<StoreItem> getChildren() {
-        return Collections.unmodifiableList(children);
-    }
-
-    private boolean contains(StoreItem item) {
-        for (StoreItem child : children) {
-            if (child == item || (child instanceof ProductBundle b && b.contains(item))) {
-                return true;
-            }
-        }
-        return false;
+    public List<Product> getContents() {
+        return Collections.unmodifiableList(contents);
     }
 
     public int getDiscountPercent() {
         return discountPercent;
     }
 
-    /** Sum of the children's prices before the bundle discount. */
     public long getFullPrice() {
-        return children.stream().mapToLong(StoreItem::getPrice).sum();
+        return contents.stream().mapToLong(Product::getPrice).sum();
     }
 
     public long getSavings() {
@@ -102,31 +78,16 @@ public final class ProductBundle implements StoreItem {
 
     @Override
     public boolean isAvailable() {
-        return !children.isEmpty() && children.stream().allMatch(StoreItem::isAvailable);
-    }
-
-    /** Each child on its own line; the contents of nested bundles are indented with "— ". */
-    @Override
-    public List<String> getDetails() {
-        List<String> lines = new ArrayList<>();
-        for (StoreItem child : children) {
-            lines.add(child.getTitle());
-            for (String line : child.getDetails()) {
-                lines.add("— " + line);
-            }
-        }
-        return lines;
+        return !contents.isEmpty() && contents.stream().allMatch(Product::isInStock);
     }
 
     @Override
-    public List<Product> getProducts() {
-        List<Product> products = new ArrayList<>();
-        children.forEach(child -> products.addAll(child.getProducts()));
-        return products;
+    public <R> R accept(StoreItemVisitor<R> visitor) {
+        return visitor.visitBundle(this);
     }
 
     @Override
     public String toString() {
-        return name + " " + children;
+        return name + " " + contents;
     }
 }

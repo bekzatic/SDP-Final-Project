@@ -1,7 +1,7 @@
 package com.coremart.addon;
 
 import com.coremart.bundle.StoreItem;
-import com.coremart.model.Category;
+import com.coremart.visitor.ComputerCheckVisitor;
 
 /**
  * DECORATOR pattern - a <b>Concrete Decorator</b>: installing Windows, drivers and programs.
@@ -20,8 +20,7 @@ public class SetupAddOn extends AddOnDecorator {
     }
 
     public static boolean containsComputer(StoreItem item) {
-        return item.getProducts().stream().anyMatch(p ->
-                p.getCategory() == Category.LAPTOP || p.getCategory() == Category.DESKTOP_PC);
+        return item.accept(new ComputerCheckVisitor());
     }
 
     @Override

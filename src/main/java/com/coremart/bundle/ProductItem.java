@@ -1,14 +1,11 @@
 package com.coremart.bundle;
 
 import com.coremart.model.Product;
-
-import java.util.List;
+import com.coremart.visitor.StoreItemVisitor;
 
 /**
- * COMPOSITE pattern - a <b>Leaf</b>.
- * <p>
- * One catalog product as a {@link StoreItem}. Price and stock are read from the product
- * itself, so the item always shows the current catalog values.
+ * VISITOR pattern - a <b>Concrete Element</b>: one catalog product as a {@link StoreItem}.
+ * Price and stock are read from the product itself, so the item always shows the current values.
  */
 public final class ProductItem implements StoreItem {
 
@@ -41,13 +38,8 @@ public final class ProductItem implements StoreItem {
     }
 
     @Override
-    public List<String> getDetails() {
-        return List.of();
-    }
-
-    @Override
-    public List<Product> getProducts() {
-        return List.of(product);
+    public <R> R accept(StoreItemVisitor<R> visitor) {
+        return visitor.visitProduct(this);
     }
 
     @Override

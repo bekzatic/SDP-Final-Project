@@ -1,18 +1,15 @@
 package com.coremart.addon;
 
 import com.coremart.bundle.StoreItem;
-import com.coremart.model.Product;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.coremart.visitor.StoreItemVisitor;
 
 /**
  * DECORATOR pattern - the <b>base Decorator</b>.
  * <p>
  * A paid service (warranty, gift wrap, software setup) wraps any {@link StoreItem} - a product,
  * a bundle or an item that already has other services - and is itself a {@code StoreItem}.
- * It passes every call to the wrapped item and adds its own price and a line in the details,
- * so services can be stacked in any combination without a subclass for every combination:
+ * It passes every call to the wrapped item and adds its own price, so services can be stacked
+ * in any combination without a subclass for every combination:
  *
  * <pre>
  * StoreItem item = new GiftWrapAddOn(new WarrantyAddOn(new ProductItem(laptop), 2));
@@ -54,15 +51,8 @@ public abstract class AddOnDecorator implements StoreItem {
     }
 
     @Override
-    public List<String> getDetails() {
-        List<String> lines = new ArrayList<>(inner.getDetails());
-        lines.add("+ " + getAddOnName() + " (" + Product.formatTenge(getAddOnPrice()) + ")");
-        return lines;
-    }
-
-    @Override
-    public List<Product> getProducts() {
-        return inner.getProducts();
+    public <R> R accept(StoreItemVisitor<R> visitor) {
+        return visitor.visitAddOn(this);
     }
 
     @Override
