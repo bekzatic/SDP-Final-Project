@@ -5,7 +5,7 @@ hardware: laptops, desktop PCs, monitors and accessories. Customers browse the c
 product page, add services, put products and bundles into the cart, check out and track their
 orders; staff manage stock and order statuses in an admin page.
 
-Built with Java 17 and Spring Boot 3 (Thymeleaf pages). Nine design patterns, three per student.
+Built with Java 17 and Spring Boot 3 (Thymeleaf pages). Nine design patterns from the course syllabus, three per student.
 
 ## Run
 
@@ -41,23 +41,23 @@ assembly, shipping and delivery. The order page shows every status change and em
 
 | Student | Patterns | Part of the store |
 |---|---|---|
-| Student 1 | Singleton, Factory Method, Builder | project setup, product model, product catalog, site design, catalog and product pages |
-| Student 2 | Composite, Decorator, Strategy | product bundles, add-on services (warranty, gift wrap, software setup), promo-code discounts and catalog sorting, cart and bundles pages |
-| Student 3 | Facade, State, Observer | checkout (`CheckoutFacade`), order statuses, notifications, checkout, my orders and admin pages |
+| Student 1 | Factory Method, Abstract Factory, Builder | project setup, product model, product catalog, ready-made setup kits, site design, catalog and product pages |
+| Student 2 | Decorator, Strategy, Visitor | product bundles, add-on services (warranty, gift wrap, software setup), promo-code discounts and catalog sorting, operations on cart items, cart and bundles pages |
+| Student 3 | Facade, Observer, Adapter | checkout (`CheckoutFacade`), order statuses, notifications, bank payments, checkout, my orders and admin pages |
 
 ## Patterns
 
 | Pattern | Classes | What it does |
 |---|---|---|
-| Singleton | `catalog/ProductCatalog` | one shared catalog and stock for the whole store |
 | Factory Method | `factory/ProductFactory`, `LaptopFactory`, `MonitorFactory`, ... | creates the right kind of product |
+| Abstract Factory | `kit/SetupKitFactory`, `StudyKitFactory`, `GamingKitFactory`, `HomeOfficeKitFactory` | creates a family of products that fit together (computer, monitor, peripherals) for a ready-made bundle |
 | Builder | `builder/ProductBuilder` | builds a product with many optional specs step by step |
-| Composite | `bundle/StoreItem`, `ProductItem`, `ProductBundle` | a bundle of products (even of bundles) behaves like one product |
 | Decorator | `addon/AddOnDecorator`, `WarrantyAddOn`, `GiftWrapAddOn`, `SetupAddOn` | paid services wrapped around a product or bundle |
 | Strategy | `pricing/DiscountStrategy`, `sorting/SortStrategy` | promo-code discounts and catalog sorting, chosen while the store runs |
+| Visitor | `visitor/StoreItemVisitor`, `DetailsVisitor`, `ContentsVisitor`, `ComputerCheckVisitor` | operations on cart items (products, bundles, items with services) kept outside the item classes |
 | Facade | `checkout/CheckoutFacade` | checkout in one call: form, stock, order, payment, notifications, cart |
-| State | `order/OrderState`, `NewState`, `PaidState`, `AssemblingState`, `ShippedState`, `DeliveredState`, `CancelledState` | order status and what is allowed in it |
 | Observer | `order/OrderObserver`, `notification/EmailNotifier`, `StockAlert`, `StockRestorer` | emails, low-stock alerts and stock return on order events |
+| Adapter | `payment/PaymentGateway`, `BankPaymentAdapter`, `DemoBankApi` | lets the checkout pay through a bank API with a different interface |
 
 Order statuses:
 
