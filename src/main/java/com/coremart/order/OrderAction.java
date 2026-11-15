@@ -3,7 +3,7 @@ package com.coremart.order;
 import java.util.Arrays;
 import java.util.Optional;
 
-/** What can be done with an order. Which actions are allowed depends on its {@link OrderState}. */
+/** What can be done with an order. Which actions are allowed depends on its {@link OrderStatus}. */
 public enum OrderAction {
 
     PAY("Pay", true, false),

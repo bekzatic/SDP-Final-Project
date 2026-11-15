@@ -23,7 +23,7 @@
     <div class="cart-layout">
         <section class="cart-lines">
             <div class="state-box">
-                <p class="state-text" th:text="${order.state.description}">What is happening with the order</p>
+                <p class="state-text" th:text="${order.statusDescription}">What is happening with the order</p>
                 <div class="state-actions" th:unless="${#lists.isEmpty(order.customerActions)}">
                     <form th:each="a : ${order.customerActions}" method="post"
                           th:action="@{/orders/{n}/{act}(n=${order.number}, act=${#strings.toLowerCase(a.name())})}">

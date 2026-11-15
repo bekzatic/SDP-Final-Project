@@ -11,15 +11,14 @@ import com.coremart.notification.Notification;
 import com.coremart.notification.NotificationLog;
 import com.coremart.notification.StockAlert;
 import com.coremart.notification.StockRestorer;
-import com.coremart.order.AssemblingState;
-import com.coremart.order.CancelledState;
-import com.coremart.order.DeliveredState;
 import com.coremart.order.DeliveryMethod;
-import com.coremart.order.NewState;
 import com.coremart.order.Order;
 import com.coremart.order.OrderAction;
-import com.coremart.order.PaidState;
+import com.coremart.order.OrderStatus;
 import com.coremart.order.PaymentMethod;
+import com.coremart.payment.BankPaymentAdapter;
+import com.coremart.payment.DemoBankApi;
+import com.coremart.payment.PaymentGateway;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,6 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -41,7 +39,7 @@ class CheckoutFacadeTest {
     private final Map<Long, Integer> stockBefore = new HashMap<>();
 
     private NotificationLog log;
-    private PaymentService payments;
+    private DemoBankApi bank;
     private OrderRepository orders;
     private CheckoutFacade facade;
     private Cart cart;
@@ -52,7 +50,8 @@ class CheckoutFacadeTest {
     void setUp() {
         catalog.findAll().forEach(p -> stockBefore.put(p.getId(), p.getStock()));
         log = new NotificationLog();
-        payments = new PaymentService();
+        bank = new DemoBankApi();
+        PaymentGateway payments = new BankPaymentAdapter(bank);
         orders = new OrderRepository();
         facade = new CheckoutFacade(catalog, orders, payments,
                 List.of(new EmailNotifier(log), new StockAlert(log), new StockRestorer(catalog, log)));
@@ -84,12 +83,12 @@ class CheckoutFacadeTest {
 
         Order order = facade.placeOrder(cart, form(DeliveryMethod.COURIER, PaymentMethod.CARD_NOW));
 
-        assertInstanceOf(PaidState.class, order.getState());
+        assertEquals(OrderStatus.PAID, order.getStatus());
         assertEquals(mice - 2, mouse.getStock());
         assertTrue(cart.isEmpty());
         assertEquals(2 * 12_000 + 2_000, order.getTotal());
         assertNotNull(order.getPaymentId());
-        assertEquals(order.getTotal(), payments.amountOf(order.getPaymentId()));
+        assertEquals(order.getTotal() * 100, bank.amountMinorOf(order.getPaymentId()), "the bank gets tiyn");
         assertEquals(order, facade.findOrder(order.getNumber()).orElseThrow());
         assertEquals(3, order.getObservers().size());
         assertEquals(2, log.forOrder(order.getNumber()).stream()
@@ -100,12 +99,12 @@ class CheckoutFacadeTest {
     void payLaterKeepsTheOrderWaiting() {
         cart.add(new ProductItem(keyboard), 1);
         Order order = facade.placeOrder(cart, form(DeliveryMethod.PICKUP, PaymentMethod.LATER));
-        assertInstanceOf(NewState.class, order.getState());
+        assertEquals(OrderStatus.NEW, order.getStatus());
         assertEquals(null, order.getPaymentId());
         assertEquals(0, order.getDeliveryCost());
 
         facade.pay(order.getNumber());
-        assertInstanceOf(PaidState.class, order.getState());
+        assertEquals(OrderStatus.PAID, order.getStatus());
         assertThrows(IllegalStateException.class, () -> facade.pay(order.getNumber()), "paid only once");
     }
 
@@ -129,9 +128,9 @@ class CheckoutFacadeTest {
 
         facade.cancel(order.getNumber());
 
-        assertInstanceOf(CancelledState.class, order.getState());
+        assertEquals(OrderStatus.CANCELLED, order.getStatus());
         assertEquals(mice, mouse.getStock());
-        assertTrue(payments.isRefunded(order.getPaymentId()));
+        assertTrue(bank.isReversed(order.getPaymentId()));
     }
 
     @Test
@@ -139,11 +138,11 @@ class CheckoutFacadeTest {
         cart.add(new ProductItem(mouse), 1);
         Order order = facade.placeOrder(cart, form(DeliveryMethod.COURIER, PaymentMethod.CARD_NOW));
         facade.advance(order.getNumber(), OrderAction.START_ASSEMBLY);
-        assertInstanceOf(AssemblingState.class, order.getState());
+        assertEquals(OrderStatus.ASSEMBLING, order.getStatus());
         facade.advance(order.getNumber(), OrderAction.SHIP);
         assertThrows(IllegalStateException.class, () -> facade.cancel(order.getNumber()));
         facade.advance(order.getNumber(), OrderAction.DELIVER);
-        assertInstanceOf(DeliveredState.class, order.getState());
+        assertEquals(OrderStatus.DELIVERED, order.getStatus());
         assertThrows(IllegalArgumentException.class, () -> facade.advance(order.getNumber(), OrderAction.PAY));
         assertThrows(IllegalArgumentException.class, () -> facade.advance("CM-999999", OrderAction.SHIP));
     }

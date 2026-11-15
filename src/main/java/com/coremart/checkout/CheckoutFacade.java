@@ -8,6 +8,7 @@ import com.coremart.order.OrderAction;
 import com.coremart.order.OrderLine;
 import com.coremart.order.OrderObserver;
 import com.coremart.order.PaymentMethod;
+import com.coremart.payment.PaymentGateway;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Facade: checkout and order handling in one simple interface.
+ * FACADE pattern - the <b>Facade</b>: checkout and order handling in one simple interface.
  * <p>
  * Placing an order touches many parts of the store: the cart, the stock in the catalog, the
  * payment system, the order list and the notifications. Controllers call one method here
@@ -27,10 +28,10 @@ public class CheckoutFacade {
 
     private final ProductCatalog catalog;
     private final OrderRepository orders;
-    private final PaymentService payments;
+    private final PaymentGateway payments;
     private final List<OrderObserver> observers;
 
-    public CheckoutFacade(ProductCatalog catalog, OrderRepository orders, PaymentService payments,
+    public CheckoutFacade(ProductCatalog catalog, OrderRepository orders, PaymentGateway payments,
                           List<OrderObserver> observers) {
         this.catalog = catalog;
         this.orders = orders;
@@ -71,8 +72,8 @@ public class CheckoutFacade {
 
     public Order pay(String orderNumber) {
         Order order = find(orderNumber);
-        if (!order.getState().allows(OrderAction.PAY)) {
-            order.pay(); // the state refuses with its own message
+        if (!order.getStatus().allows(OrderAction.PAY)) {
+            order.pay(); // refused with a message about the current status
         }
         takePayment(order);
         return order;

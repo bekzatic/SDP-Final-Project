@@ -3,10 +3,10 @@ package com.coremart.notification;
 import com.coremart.model.Product;
 import com.coremart.order.Order;
 import com.coremart.order.OrderObserver;
-import com.coremart.order.OrderState;
+import com.coremart.order.OrderStatus;
 import org.springframework.stereotype.Component;
 
-/** Concrete observer: warns the warehouse when an order leaves few items of a product. */
+/** OBSERVER pattern - a <b>Concrete Observer</b>: warns the warehouse when an order leaves few items of a product. */
 @Component
 public class StockAlert implements OrderObserver {
 
@@ -32,7 +32,7 @@ public class StockAlert implements OrderObserver {
     }
 
     @Override
-    public void statusChanged(Order order, OrderState from, OrderState to) {
+    public void statusChanged(Order order, OrderStatus from, OrderStatus to) {
         // only the stock level matters here
     }
 }

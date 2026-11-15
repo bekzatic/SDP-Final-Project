@@ -67,7 +67,7 @@ class StoreJourneyTest {
                 .andReturn().getResponse().getRedirectedUrl();
         String number = url.substring("/orders/".length());
 
-        // State: pay, then the staff move the order on
+        // Adapter: payment through the bank API; then the staff move the order on
         mvc.perform(post(url + "/pay").session(session));
         for (String action : new String[] {"start_assembly", "ship", "deliver"}) {
             mvc.perform(post("/admin/orders/" + number + "/" + action));

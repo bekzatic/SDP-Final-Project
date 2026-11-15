@@ -11,13 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * A placed order.
+ * A placed order. Its {@link OrderStatus} decides which actions are allowed and what comes next.
  * <p>
- * State context: the order does not check its status itself: {@link #pay()}, {@link #ship()}
- * and the other actions are passed to the current {@link OrderState}, which either moves the
- * order on or refuses.
- * <p>
- * Observer subject: {@link OrderObserver}s subscribe to the order and are told when it is placed
+ * OBSERVER pattern - the <b>Subject</b>: {@link OrderObserver}s subscribe to the order and are told when it is placed
  * and every time its status changes. The order does not know what they do with it.
  */
 public class Order {
@@ -37,7 +33,7 @@ public class Order {
     private final LocalDateTime createdAt = LocalDateTime.now();
     private final List<StatusChange> history = new ArrayList<>();
     private final List<OrderObserver> observers = new ArrayList<>();
-    private OrderState state = new NewState();
+    private OrderStatus status = OrderStatus.NEW;
     private String paymentId;
     private boolean placed;
 
@@ -62,47 +58,40 @@ public class Order {
         this.discount = discount;
         this.promoCode = promoCode;
         this.deliveryCost = delivery.costFor(subtotal - discount);
-        history.add(new StatusChange(state.getName(), createdAt));
+        history.add(new StatusChange(getStatusName(), createdAt));
     }
 
     public void pay() {
-        state.pay(this);
+        perform(OrderAction.PAY);
     }
 
     public void startAssembly() {
-        state.startAssembly(this);
+        perform(OrderAction.START_ASSEMBLY);
     }
 
     public void ship() {
-        state.ship(this);
+        perform(OrderAction.SHIP);
     }
 
     public void deliver() {
-        state.deliver(this);
+        perform(OrderAction.DELIVER);
     }
 
     public void cancel() {
-        state.cancel(this);
+        perform(OrderAction.CANCEL);
     }
 
-    /** Runs an action chosen on a page, e.g. a button on the admin page. */
+    /** Runs an action if the current status allows it and tells every observer about the change. */
     public void perform(OrderAction action) {
-        switch (action) {
-            case PAY -> pay();
-            case START_ASSEMBLY -> startAssembly();
-            case SHIP -> ship();
-            case DELIVER -> deliver();
-            case CANCEL -> cancel();
+        if (!status.allows(action)) {
+            throw new IllegalStateException("Action “" + action.getLabel()
+                    + "” is not available: the order status is “" + getStatusName() + "”");
         }
-    }
-
-    /** Called by the states only. Tells every observer about the change. */
-    void changeState(OrderState next) {
-        OrderState previous = state;
-        state = next;
-        history.add(new StatusChange(next.getName(), LocalDateTime.now()));
+        OrderStatus previous = status;
+        status = status.after(action);
+        history.add(new StatusChange(getStatusName(), LocalDateTime.now()));
         for (OrderObserver observer : List.copyOf(observers)) {
-            observer.statusChanged(this, previous, next);
+            observer.statusChanged(this, previous, status);
         }
     }
 
@@ -138,12 +127,16 @@ public class Order {
         return placed;
     }
 
-    public OrderState getState() {
-        return state;
+    public OrderStatus getStatus() {
+        return status;
     }
 
     public String getStatusName() {
-        return state.getName();
+        return status.getName(delivery);
+    }
+
+    public String getStatusDescription() {
+        return status.getDescription(delivery);
     }
 
     public List<StatusChange> getHistory() {
@@ -152,12 +145,12 @@ public class Order {
 
     /** Buttons the customer sees on the order page. */
     public List<OrderAction> getCustomerActions() {
-        return state.getAvailableActions().stream().filter(OrderAction::isForCustomer).toList();
+        return status.getAvailableActions().stream().filter(OrderAction::isForCustomer).toList();
     }
 
     /** Buttons the staff see on the admin page. */
     public List<OrderAction> getStaffActions() {
-        return state.getAvailableActions().stream().filter(OrderAction::isForStaff).toList();
+        return status.getAvailableActions().stream().filter(OrderAction::isForStaff).toList();
     }
 
     /** Id of the payment in the payment system; null while the order is not paid. */

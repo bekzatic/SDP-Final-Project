@@ -8,6 +8,7 @@ import com.coremart.notification.NotificationLog;
 import com.coremart.notification.StockAlert;
 import com.coremart.order.Order;
 import com.coremart.order.OrderAction;
+import com.coremart.order.OrderStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Page for the store staff: all orders with the actions their status allows (State),
+ * Page for the store staff: all orders with the actions their status allows,
  * stock levels with restocking, and the warehouse notifications (Observer).
  * Learning project: the page has no login.
  */
@@ -43,11 +44,11 @@ public class AdminController {
     public String admin(Model model) {
         List<Order> orders = checkout.allOrders();
         model.addAttribute("orders", orders);
-        model.addAttribute("waiting", orders.stream().filter(o -> o.getState().getCode().equals("NEW")).count());
+        model.addAttribute("waiting", orders.stream().filter(o -> o.getStatus() == OrderStatus.NEW).count());
         model.addAttribute("inWork", orders.stream().filter(o -> !o.getStaffActions().isEmpty()
-                && !o.getState().getCode().equals("NEW")).count());
+                && o.getStatus() != OrderStatus.NEW).count());
         model.addAttribute("revenue", Product.formatTenge(orders.stream()
-                .filter(o -> o.getPaymentId() != null && !o.getState().getCode().equals("CANCELLED"))
+                .filter(o -> o.getPaymentId() != null && o.getStatus() != OrderStatus.CANCELLED)
                 .mapToLong(Order::getTotal).sum()));
         model.addAttribute("products", catalog.findAll());
         model.addAttribute("threshold", StockAlert.THRESHOLD);

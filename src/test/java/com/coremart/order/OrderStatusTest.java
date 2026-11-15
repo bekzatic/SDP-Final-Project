@@ -14,11 +14,10 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class OrderStateTest {
+class OrderStatusTest {
 
     private Product laptop;
     private Product mouse;
@@ -39,7 +38,7 @@ class OrderStateTest {
     @Test
     void newOrderWaitsForPayment() {
         Order order = order(DeliveryMethod.PICKUP);
-        assertInstanceOf(NewState.class, order.getState());
+        assertEquals(OrderStatus.NEW, order.getStatus());
         assertEquals("CM-1001", order.getNumber());
         assertEquals("Awaiting payment", order.getStatusName());
         assertEquals(List.of(OrderAction.PAY, OrderAction.CANCEL), order.getCustomerActions());
@@ -51,15 +50,15 @@ class OrderStateTest {
     void fullPathFromPaymentToDelivery() {
         Order order = order(DeliveryMethod.COURIER);
         order.pay();
-        assertInstanceOf(PaidState.class, order.getState());
+        assertEquals(OrderStatus.PAID, order.getStatus());
         order.startAssembly();
-        assertInstanceOf(AssemblingState.class, order.getState());
+        assertEquals(OrderStatus.ASSEMBLING, order.getStatus());
         order.ship();
-        assertInstanceOf(ShippedState.class, order.getState());
+        assertEquals(OrderStatus.SHIPPED, order.getStatus());
         assertEquals("With courier", order.getStatusName());
         order.deliver();
-        assertInstanceOf(DeliveredState.class, order.getState());
-        assertTrue(order.getState().isFinal());
+        assertEquals(OrderStatus.DELIVERED, order.getStatus());
+        assertTrue(order.getStatus().isFinal());
         assertEquals(List.of("Awaiting payment", "Paid", "Assembling", "With courier", "Delivered"),
                 order.getHistory().stream().map(StatusChange::status).toList());
     }
@@ -91,18 +90,18 @@ class OrderStateTest {
     void cancelOnlyBeforeTheOrderLeavesTheWarehouse() {
         Order fresh = order(DeliveryMethod.PICKUP);
         fresh.cancel();
-        assertInstanceOf(CancelledState.class, fresh.getState());
+        assertEquals(OrderStatus.CANCELLED, fresh.getStatus());
 
         Order paid = order(DeliveryMethod.PICKUP);
         paid.pay();
         paid.cancel();
-        assertInstanceOf(CancelledState.class, paid.getState());
+        assertEquals(OrderStatus.CANCELLED, paid.getStatus());
 
         Order assembling = order(DeliveryMethod.PICKUP);
         assembling.pay();
         assembling.startAssembly();
         assembling.cancel();
-        assertInstanceOf(CancelledState.class, assembling.getState());
+        assertEquals(OrderStatus.CANCELLED, assembling.getStatus());
 
         Order shipped = order(DeliveryMethod.COURIER);
         shipped.pay();
@@ -111,7 +110,7 @@ class OrderStateTest {
         assertThrows(IllegalStateException.class, shipped::cancel);
 
         assertThrows(IllegalStateException.class, fresh::pay);
-        assertTrue(fresh.getState().isFinal());
+        assertTrue(fresh.getStatus().isFinal());
     }
 
     @Test
@@ -119,8 +118,8 @@ class OrderStateTest {
         Order order = order(DeliveryMethod.PICKUP);
         order.perform(OrderAction.PAY);
         order.perform(OrderAction.START_ASSEMBLY);
-        assertTrue(order.getState().allows(OrderAction.SHIP));
-        assertFalse(order.getState().allows(OrderAction.PAY));
+        assertTrue(order.getStatus().allows(OrderAction.SHIP));
+        assertFalse(order.getStatus().allows(OrderAction.PAY));
         assertEquals(OrderAction.START_ASSEMBLY, OrderAction.parse("start_assembly").orElseThrow());
         assertTrue(OrderAction.parse("nope").isEmpty());
     }

@@ -42,9 +42,9 @@
     <div class="flash flash-error" th:if="${error}" th:text="${error}" role="alert">Error</div>
 </th:block>
 
-<!-- Order status badge; the colour comes from the state code (NEW, PAID, ...). -->
+<!-- Order status badge; the colour comes from the status code (NEW, PAID, ...). -->
 <span th:fragment="status(order)" class="status"
-      th:classappend="'status-' + ${#strings.toLowerCase(order.state.code)}"
+      th:classappend="'status-' + ${#strings.toLowerCase(order.status.code)}"
       th:text="${order.statusName}">Status</span>
 
 <!-- Simple line icons for the product categories, drawn with SVG (no photos). -->

@@ -2,15 +2,14 @@ package com.coremart.notification;
 
 import com.coremart.catalog.ProductCatalog;
 import com.coremart.model.Product;
-import com.coremart.order.CancelledState;
 import com.coremart.order.Order;
 import com.coremart.order.OrderObserver;
-import com.coremart.order.OrderState;
+import com.coremart.order.OrderStatus;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
-/** Concrete observer: puts the products of a cancelled order back in stock. */
+/** OBSERVER pattern - a <b>Concrete Observer</b>: puts the products of a cancelled order back in stock. */
 @Component
 public class StockRestorer implements OrderObserver {
 
@@ -23,8 +22,8 @@ public class StockRestorer implements OrderObserver {
     }
 
     @Override
-    public void statusChanged(Order order, OrderState from, OrderState to) {
-        if (!(to instanceof CancelledState)) {
+    public void statusChanged(Order order, OrderStatus from, OrderStatus to) {
+        if (to != OrderStatus.CANCELLED) {
             return;
         }
         for (Map.Entry<Product, Integer> e : order.getRequiredStock().entrySet()) {

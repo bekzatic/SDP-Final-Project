@@ -129,7 +129,7 @@ class CheckoutPageTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Order " + number + " placed. Thank you!")))
                 .andExpect(content().string(containsString("status status-paid")))
-                .andExpect(content().string(containsString("Paid, payment PAY-")))
+                .andExpect(content().string(containsString("Paid, payment TX-")))
                 .andExpect(content().string(containsString("City courier")))
                 .andExpect(content().string(containsString("Order " + number + ": “Paid”.")))
                 .andExpect(content().string(containsString("<span class=\"cart-count\">0</span>")))
