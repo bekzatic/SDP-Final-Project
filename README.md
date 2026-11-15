@@ -27,7 +27,7 @@ Payment is a demo: no card data is asked for.
 |---|---|
 | `/`, `/catalog` | catalog with category filter and sorting |
 | `/product/{id}` | product page: characteristics, warranty and services, "add to cart" |
-| `/bundles` | ready-made bundles, some with a nested bundle |
+| `/bundles` | ready-made setup kits: study, gaming, home office |
 | `/cart` | cart: quantities, promo codes (`STUDENT10`, `SALE15`, `CORE5000`), "Checkout" |
 | `/checkout` | checkout form: contacts, pickup or courier, pay now or later |
 | `/orders`, `/orders/{number}` | my orders: status, history, emails, pay or cancel |
